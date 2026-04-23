@@ -1,0 +1,121 @@
+===== FOREIGN CHARACTERS GUIDE =====
+
+This guide shows how to type special characters using simple patterns.
+Just type the pattern and the program will automatically convert it.
+
+=====================================
+NORWEGIAN CHARACTERS
+=====================================
+
+AAAAA  ->  Å  (A with ring above)
+aaaaa  ->  å  (a with ring above)
+
+AAEE   ->  Æ  (AE ligature)
+aaee   ->  æ  (ae ligature)
+
+OOEE   ->  Ø  (O with stroke)
+ooee   ->  ø  (o with stroke)
+
+=====================================
+TURKISH CHARACTERS
+=====================================
+
+AAAA   ->  Â  (A with circumflex)
+aaaa   ->  â  (a with circumflex)
+
+IIII   ->  Î  (I with circumflex)
+iiii   ->  î  (i with circumflex)
+
+UUUU   ->  Û  (U with circumflex)
+uuuu   ->  û  (u with circumflex)
+
+CC     ->  Ç  (C with cedilla)
+cc     ->  ç  (c with cedilla)
+
+GG     ->  Ğ  (G with breve)
+gg     ->  ğ  (g with breve)
+
+II     ->  İ  (I with dot above)
+ii     ->  ı  (dotless i)
+
+OO     ->  Ö  (O with diaeresis)
+oo     ->  ö  (o with diaeresis)
+
+SS     ->  Ş  (S with cedilla)
+ss     ->  ş  (s with cedilla)
+
+UU     ->  Ü  (U with diaeresis)
+uu     ->  ü  (u with diaeresis)
+
+=====================================
+LATIN/SPANISH CHARACTERS
+=====================================
+
+AAA    ->  Á  (A with acute)
+aaa    ->  á  (a with acute)
+
+EEE    ->  É  (E with acute)
+eee    ->  é  (e with acute)
+
+III    ->  Í  (I with acute)
+iii    ->  í  (i with acute)
+
+OOO    ->  Ó  (O with acute)
+ooo    ->  ó  (o with acute)
+
+UUU    ->  Ú  (U with acute)
+uuu    ->  ú  (u with acute)
+
+NNN    ->  Ñ  (N with tilde)
+nnn    ->  ñ  (n with tilde)
+
+???    ->  ¿  (inverted question mark)
+!!!    ->  ¡  (inverted exclamation)
+
+=====================================
+SYMBOLS
+=====================================
+
+KAVISLIAC    ->  {  (curly brace open)
+KAVISLIKAPA  ->  }  (curly brace close)
+
+KOSELIAC     ->  [  (square bracket open)
+KOSELIKAPA   ->  ]  (square bracket close)
+
+""           ->  '  (double quote to single quote)
+
+//           ->  \  (backslash) - uncomment in code if needed
+
+=====================================
+IMPORTANT NOTES
+=====================================
+
+1. Patterns are case-sensitive!
+   - Use uppercase for uppercase letters
+   - Use lowercase for lowercase letters
+
+2. Longer patterns MUST be processed before shorter ones.
+   Example: AAAAA (Å) before AAAA (Â) before AAA (Á)
+
+3. These patterns are designed for plain text editing.
+   Just type naturally and the conversion happens automatically.
+
+=====================================
+EXAMPLE USAGE
+=====================================
+
+Type:  MedreseAAAA acildi.
+Result: MedreseÂ acildi.
+
+Type:  AAAAA lesund
+Result: Å lesund
+
+Type:  AAEErlighet
+Result: Ærlighet
+
+Type:  OOEEl
+Result: Øl
+
+=====================================
+END OF GUIDE
+=====================================

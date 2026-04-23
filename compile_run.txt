@@ -1,0 +1,40 @@
+Jar icinden cikarilip yeniden klasorler olusturulacak ise:
+rm -rfv net
+
+mkdir build
+
+mkdir build/classes
+
+mkdir dist
+
+mv -fv META-INF/MANIFEST.MF .
+
+rm -rfv META-INF
+
+mv -fv notepad.jar dist/notdefteri_190426.jar
+
+########
+Windows:
+javac -source 1.6 -target 1.6 -sourcepath src; -cp obj; -g:none -proc:none -nowarn -O src\net\dilmerkezi\defter\NotDefteriX.java -d obj
+
+jar cvmf MANIFEST.MF bin\notdefteri_190426.jar -C obj net -C . src tool compile_run.txt ControlChanges.* changes.txt
+
+rmdir /s /q obj\net
+
+cd bin
+
+java -jar notdefteri_190426.jar
+########
+Linux; Bastan derleme yapilacak ise:
+
+javac -source 1.8 -target 1.8 -sourcepath src -cp obj -g:none -proc:none -nowarn -O -d obj src/net/dilmerkezi/defter/NotDefteriX.java
+
+jar cvmf MANIFEST.MF bin/notdefteri_190426.jar -C obj net -C . src tool compile_run.txt xcopy.sh ControlChanges.* changes.txt
+
+rm -rfv obj/net
+
+cd bin
+
+java -jar notdefteri_190426.jar &
+#####
+-END-

@@ -3346,7 +3346,7 @@ implements ActionListener
 				"Example 3: \\u0061\\u0070\\u0070\\u006c\\u0065 (Unicode)<br><br>" +
 				"<font color=\"red\">" +
 				"NOTE: Regex patterns are supported (e.g., \\d+).<br>" +
-				"The normal 'Find' menu works with plain text only." +
+				"The normal 'Find' menu works with plain text only.<br>" +
 				"Use regexFind for regex contains expressions." + 
 				"</font>" +
 				"</font>" +

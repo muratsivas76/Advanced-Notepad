@@ -39,18 +39,25 @@ public class XCharacterMap extends JDialog {
       }
     };
     
-    // 2. Define Unicode blocks to include
-    int[][] blocks = {
-      {0x0020, 0x017F}, // Basic Latin & Latin Extended-A (Standard letters)
-      {0x0370, 0x03FF}, // Greek and Coptic
-      {0x2000, 0x206F}, // General Punctuation
-      {0x2100, 0x214F}, // Letterlike Symbols
-      {0x2190, 0x21FF}, // Arrows
-      {0x2200, 0x22FF}, // Mathematical Operators
-      {0x25A0, 0x25FF}, // Geometric Shapes
-      {0x2600, 0x26FF}, // Miscellaneous Symbols (Phone ☎, Sun ☀, Cloud ☁, etc.)
-      {0x2700, 0x27BF}  // Dingbats (Scissors ✂, Pencil ✎, Stars ★)
-    };
+	// 2. Define Unicode blocks to include (Enriched with Arabic, Persian and more)
+	int[][] blocks = {
+		{0x0020, 0x017F}, // Basic Latin & Latin Extended-A (Standard letters)
+		{0x0600, 0x06FF}, // Arabic (Includes Persian/Farsi characters like گ, چ, پ, ژ)
+		{0x0750, 0x077F}, // Arabic Supplement (Extra Persian/Urdu styles)
+		{0x08A0, 0x08FF}, // Arabic Extended-A
+		{0xFB50, 0xFDFF}, // Arabic Presentation Forms-A (Ligatures)
+		{0xFE70, 0xFEFF}, // Arabic Presentation Forms-B (Isolated/Final/Initial forms)
+		{0x0370, 0x03FF}, // Greek and Coptic
+		{0x2000, 0x206F}, // General Punctuation
+		{0x20A0, 0x20CF}, // Currency Symbols (Euro, Bitcoin, Lira etc.)
+		{0x2100, 0x214F}, // Letterlike Symbols
+		{0x2190, 0x21FF}, // Arrows
+		{0x2200, 0x22FF}, // Mathematical Operators
+		{0x2460, 0x24FF}, // Enclosed Alphanumerics (①, ②, Ⓐ, Ⓑ - Great for lists!)
+		{0x25A0, 0x25FF}, // Geometric Shapes
+		{0x2600, 0x26FF}, // Miscellaneous Symbols (Phone ☎, Sun ☀, Cloud ☁)
+		{0x2700, 0x27BF}  // Dingbats (Scissors ✂, Pencil ✎, Stars ★)
+	};
     
     // Fill the table with characters from defined blocks
     for (int[] block : blocks) {

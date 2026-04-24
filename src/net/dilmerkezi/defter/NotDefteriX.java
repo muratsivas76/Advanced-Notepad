@@ -605,106 +605,108 @@ implements ActionListener
     
     JMenu beatm=getMenu ("Beautify");
     
-    JMenuItem harapcaSil = getMenuItem("Remove Odd Chars", -1, "");
-    harapcaSil.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent evt) {
-          statusLabel.setText("");
-          String text = txt.getText();
-          
-          if (text == null || text.length() < 1) {
-            statusLabel.setText("Text is null or too short!");
-            return;
-          }
-          
-          try {
-            // Using a single StringBuilder for the entire process to save memory
-            // Initial capacity set to text length to avoid resizing
-            StringBuilder sb = new StringBuilder(text.length());
-            
-            // Using StringReader for line by line processing
-            BufferedReader br = new BufferedReader(new StringReader(text));
-            String line;
-            boolean firstLine = true;
-            
-            while ((line = br.readLine()) != null) {
-              // To keep line count exact, we add newline before subsequent lines
-              if (!firstLine) {
-                sb.append("\n");
-              }
-              firstLine = false;
-              
-              String trimmed = line.trim();
-              final int trimlen = trimmed.length();
-              if (trimlen < 1) {
-                sb.append('\n');
-                continue;
-              }
-              
-              // Process each character of the line one by one
-              for (int i = 0; i < trimlen; i++) {
-                char c = trimmed.charAt(i);
-                
-                // Mapping problematic characters to clean ones
-                switch (c) {
-                  case '`':   sb.append('\''); break;
-                  case (char)95:  sb.append('-'); break;
-                  case (char)127: sb.append(' '); break;
-                  case (char)160: sb.append(' '); break; // Non-breaking space
-                    case (char)166: sb.append(':'); break;
-                  case (char)168: sb.append('~'); break;
-                  case (char)170: sb.append('a'); break;
-                  case (char)171: sb.append('"'); break;
-                  case (char)173: sb.append('-'); break;
-                  case (char)175: sb.append('~'); break;
-                  case (char)176: sb.append("o:"); break;
-                  case (char)180: sb.append('\''); break;
-                  case (char)182: sb.append('~'); break;
-                  case (char)183: sb.append(' '); break;
-                  case (char)184: sb.append(' '); break;
-                  case (char)186: sb.append("o:"); break;
-                  case (char)187: sb.append('"'); break;
-                  case (char)247: sb.append('/'); break;
-                  case (char)8210: case (char)8211: case (char)8212: sb.append('-'); break; // Hyphens
-                  case (char)8213: sb.append("--"); break; // Horizontal bar
-                  case (char)8214: break; // Double vertical line (removed)
-                  case (char)8215: sb.append('='); break;  // Double low line
-                  case (char)8216: case (char)8217: sb.append('\''); break; // Smart quotes
-                  case (char)8218: sb.append(','); break;  // Single low-9 quote
-                  case (char)8219: sb.append('/'); break;  // Reversed quote
-                  case (char)8220: case (char)8221: case (char)8223: sb.append('"'); break; // Smart double quotes
-                  case (char)8222: sb.append(','); break;  // Double low-9 quote
-                  case (char)8224: case (char)8225: sb.append('+'); break; // Daggers
-                  case (char)8226: sb.append("--"); break; // Bullet
-                  case (char)8230: sb.append("..."); break; // Ellipsis
-                  case (char)8592: sb.append("<--"); break; // Left arrow
-                  case (char)8594: sb.append("-->"); break; // Right arrow
-                  case (char)9474: sb.append('-'); break;  // Box drawings light vertical
-                    case (char)61694: sb.append('~'); break;
-                  case (char)65533: sb.append(' '); break; // Replacement char
-                    
-                  // New common problematic characters in text files:
-                  case (char)128: sb.append("EUR"); break; // Euro sign
-                  case (char)153: sb.append("(TM)"); break; // Trademark
-                  case (char)169: sb.append("(c)"); break;  // Copyright
-                  case (char)174: sb.append("(r)"); break;  // Registered
-                    
-                  default: sb.append(c); break; // Keep original if no match
-                  }
-              }
-            }
-            
-            txt.setText(sb.toString());
-            statusLabel.setText("Cleaned text efficiently.");
-            br.close();
-            
-            } catch (IOException ioe) {
-            ioe.printStackTrace();
-          }
-          
-          txt.requestFocus();
-        }
-    });
-    beatm.add(harapcaSil);
+	// Create the menu item for cleaning problematic/odd characters
+	JMenuItem harapcaSil = getMenuItem("Remove Odd Chars", -1, "");
+	harapcaSil.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent evt) {
+			statusLabel.setText("");
+			String text = txt.getText();
+
+			if (text == null || text.length() < 1) {
+				statusLabel.setText("Text is null or too short!");
+				return;
+			}
+
+			try {
+				// Use StringBuilder with initial capacity to optimize memory usage
+				StringBuilder sb = new StringBuilder(text.length());
+				
+				// Process the text using BufferedReader to handle lines correctly
+				BufferedReader br = new BufferedReader(new StringReader(text));
+				String line;
+				boolean firstLine = true;
+
+				while ((line = br.readLine()) != null) {
+					// Keep the exact line structure by adding newline before subsequent lines
+					if (!firstLine) {
+						sb.append("\n");
+					}
+					firstLine = false;
+
+					// Process every single character in the line (trim removed as requested)
+					int lineLen = line.length();
+					for (int i = 0; i < lineLen; i++) {
+						char c = line.charAt(i);
+						int n = (int) c;
+
+						// 1. Handle critical control characters (0-31)
+						// Keep: 9 (TAB), 10 (LF), 13 (CR). Remove others like Null, Bell, Esc etc.
+						if (n < 32 && n != 9 && n != 10 && n != 13) {
+							continue; // Skip problematic control characters
+						}
+
+						// 2. Mapping known problematic characters to clean equivalents
+						switch (c) {
+							case '`':   sb.append('\''); break;
+							case (char)95:  sb.append('-'); break;
+							case (char)127: sb.append(' '); break;
+							case (char)160: sb.append(' '); break; // Non-breaking space
+							case (char)166: sb.append(':'); break;
+							case (char)168: sb.append('~'); break;
+							case (char)170: sb.append('a'); break;
+							case (char)171: sb.append('"'); break;
+							case (char)173: sb.append('-'); break;
+							case (char)175: sb.append('~'); break;
+							case (char)176: sb.append("o:"); break;
+							case (char)180: sb.append('\''); break;
+							case (char)182: sb.append('~'); break;
+							case (char)183: sb.append(' '); break;
+							case (char)184: sb.append(' '); break;
+							case (char)186: sb.append("o:"); break;
+							case (char)187: sb.append('"'); break;
+							case (char)247: sb.append('/'); break;
+							case (char)8210: case (char)8211: case (char)8212: sb.append('-'); break; // Hyphens
+							case (char)8213: sb.append("--"); break; // Horizontal bar
+							case (char)8214: break; // Double vertical line (removed)
+							case (char)8215: sb.append('='); break; // Double low line
+							case (char)8216: case (char)8217: sb.append('\''); break; // Smart quotes
+							case (char)8218: sb.append(','); break; // Single low-9 quote
+							case (char)8219: sb.append('/'); break; // Reversed quote
+							case (char)8220: case (char)8221: case (char)8223: sb.append('"'); break; // Smart double quotes
+							case (char)8222: sb.append(','); break; // Double low-9 quote
+							case (char)8224: case (char)8225: sb.append('+'); break; // Daggers
+							case (char)8226: sb.append("--"); break; // Bullet
+							case (char)8230: sb.append("..."); break; // Ellipsis
+							case (char)8592: sb.append("<--"); break; // Left arrow
+							case (char)8594: sb.append("-->"); break; // Right arrow
+							case (char)9474: sb.append('-'); break; // Box drawings
+							case (char)61694: sb.append('~'); break;
+							case (char)65533: sb.append(' '); break; // Replacement char
+							case (char)128: sb.append("EUR"); break; // Euro sign
+							case (char)153: sb.append("(TM)"); break; // Trademark
+							case (char)169: sb.append("(c)"); break; // Copyright
+							case (char)174: sb.append("(r)"); break; // Registered
+							
+							default: sb.append(c); break; // Keep the original character
+						}
+					}
+				}
+
+				// Update the text area with cleaned content
+				txt.setText(sb.toString());
+				statusLabel.setText("Text cleaned successfully (No trim).");
+				br.close();
+
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				statusLabel.setText("Error during cleaning process!");
+			}
+
+			txt.requestFocus();
+		}
+	});
+	// Add the menu item to the specific menu group
+	beatm.add(harapcaSil);
     
     beatm.addSeparator ();
     
@@ -2704,53 +2706,79 @@ implements ActionListener
     
     m2a.addSeparator();
     
-    JMenuItem sayCharItem = getMenuItem ("Show Char Num", -1, "");
-    sayCharItem.addActionListener (new ActionListener ()
-      {
-        public void actionPerformed (ActionEvent evt)
-        {
-          statusLabel.setText("");
-          String m=txt.getSelectedText ();
-          if (m==null)
-          {
-            statusLabel.setText ("Show Char: Null Text!");
-            return;
-          }
-          
-          m=m.replaceAll ("\r", "");
-          m=m.replaceAll ("\n", "");
-          
-          int MX=m.length ();
-          if (MX < 1)
-          {
-            statusLabel.setText ("Zero Length Text For!");
-            return;
-          }
-          
-          char chr=',';
-          int n=0;
-          
-          if (MX>10) MX=10;
-          
-          StringBuffer sb=new StringBuffer ("<html><body><font color=\"blue\" size=\"5\"><b>");
-          
-          for (int i=0; i<MX; i++)
-          {
-            chr=m.charAt (i);
-            n=(int)(chr);
-            sb.append (Character.toString (chr)+" -> "+Integer.toString (n)+"<br><br>");
-          }
-          
-          sb.append ("</b></font></body></html>");
-          
-          String retmensage = sb.toString ();
-          
-          JOptionPane.showMessageDialog(mb, retmensage);
-          
-          return;
-        }
-    });
-    m2a.add (sayCharItem);
+	// Create the menu item with "Show Char Num" label
+	JMenuItem sayCharItem = getMenuItem("Show Char Num", -1, "");
+	sayCharItem.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent evt) {
+			statusLabel.setText("");
+			String m = txt.getSelectedText();
+
+			// 1. Alert if no text is selected
+			if (m == null || m.isEmpty()) {
+				statusLabel.setText("No selection found.");
+				JOptionPane.showMessageDialog(mb, "Select at least one character...", "Warning", JOptionPane.WARNING_MESSAGE);
+				return;
+			}
+
+			// 2. Limit the process to the first 7 characters
+			int MX = m.length();
+			if (MX > 7) MX = 7;
+
+			// 3. Prepare HTML with explicit font sizes for every cell
+			// We use 18pt for general data and 24pt for the character itself
+			StringBuffer sb = new StringBuffer("<html><body>");
+			sb.append("<h2 style='color:blue; font-size:20pt;'>Character Analysis-First 7 chars</h2>");
+			sb.append("<table border='1' cellpadding='10' cellspacing='0'>");
+			sb.append("<tr bgcolor='#eeeeee'>");
+			sb.append("<th><font size='6'>Chr</font></th>");
+			sb.append("<th><font size='6'>Dec</font></th>");
+			sb.append("<th><font size='6'>Hex</font></th>");
+			sb.append("<th><font size='6'>Uni</font></th>");
+			sb.append("<th><font size='6'>Binary (16-bit)</font></th>");
+			sb.append("</tr>");
+
+			for (int i = 0; i < MX; i++) {
+				char chr = m.charAt(i);
+				int n = (int) chr;
+
+				// Handle special characters
+				String display;
+				if (n == 10) display = "[LF]";
+				else if (n == 13) display = "[CR]";
+				else if (n == 9) display = "[TAB]";
+				else if (n == 32) display = "[SP]";
+				else display = String.valueOf(chr);
+
+				// Conversions
+				String hex = Integer.toHexString(n).toUpperCase();
+				String bin = Integer.toBinaryString(n);
+				
+				// Manual padding for 16-bit binary
+				String binPadded = "0000000000000000" + bin;
+				binPadded = binPadded.substring(binPadded.length() - 16);
+				
+				// Manual padding for Unicode
+				String uni = "0000" + hex;
+				uni = "\\u" + uni.substring(uni.length() - 4);
+
+				// Add row with explicit font tags for Java 6/7 compatibility
+				sb.append("<tr>");
+				sb.append("<td align='center'><b><font size='7' color='red'>").append(display).append("</font></b></td>");
+				sb.append("<td align='center'><font size='6'>").append(n).append("</font></td>");
+				sb.append("<td align='center'><font size='6'>0x").append(hex).append("</font></td>");
+				sb.append("<td align='center'><font size='6'>").append(uni).append("</font></td>");
+				sb.append("<td align='center'><font size='5' color='blue'>").append(binPadded).append("</font></td>");
+				sb.append("</tr>");
+			}
+
+			sb.append("</table></body></html>");
+
+			// 4. Show the dialog
+			JOptionPane.showMessageDialog(mb, sb.toString(), "Character Details", JOptionPane.INFORMATION_MESSAGE);
+		}
+	});
+	// Add to menu
+	m2a.add(sayCharItem);
     
     m2a.addSeparator ();
     
@@ -3304,96 +3332,86 @@ implements ActionListener
     
     m2b.addSeparator ();
     
-    JMenuItem xfindItem = getMenuItem("Change Find Word", KeyEvent.VK_B, "CTRL-B");
-    xfindItem.addActionListener(new ActionListener()
-      {
-        public void actionPerformed(ActionEvent evt)
-        {
-          statusLabel.setText("");
-          String content = JOptionPane.showInputDialog(mb,
-            "<html><body>" +
-            "<font color=\"blue\" size=\"5\">Text For Find:</font><br><br>" +
-            "<font color=\"blue\" size=\"4\">" +
-            "You can enter normal text or ASCII codes separated by ;<br>" +
-            "Example 1: apple<br>" +
-            "Example 2: 97;112;112;108;101 (which means 'apple')<br>" +
-            "Example 3: 97;112;112;108;101 or normal text<br><br>" +
-            "<font color=\"red\">" +
-            "NOTE: You can also enter REGEX patterns (like \\d+\\* or \\w+\\?\\d+).<br>" +
-            "If you enter a regex, please use the 'Regex Find' menu item to search.<br>" +
-            "The normal 'Find' menu works with plain text only." +
-            "</font>" +
-            "</font>" +
-          "</body></html>");
-          
-          if (content == null)
-          {
-            statusLabel.setText("Find word input cancelled!");
-            return;
-          }
-          
-          if (content.length() < 1)
-          {
-            statusLabel.setText("Find word is empty!");
-            CONFIND = "";
-            txt.requestFocus();
-            return;
-          }
-          
-          // Check if input contains only numbers and semicolons (ASCII code format)
-          boolean isAsciiFormat = true;
-          for (int i = 0; i < content.length(); i++)
-          {
-            char c = content.charAt(i);
-            if (!Character.isDigit(c) && c != ';')
-            {
-              isAsciiFormat = false;
-              break;
-            }
-          }
-          
-          String processedWord;
-          
-          if (isAsciiFormat && content.contains(";"))
-          {
-            // ASCII code format: "97;98;99" -> "abc"
-            try
-            {
-              String[] codes = content.split(";");
-              StringBuffer decoded = new StringBuffer();
-              
-              for (String code : codes)
-              {
-                if (code.trim().length() > 0)
-                {
-                  int ascii = Integer.parseInt(code.trim());
-                  decoded.append((char) ascii);
-                }
-              }
-              
-              processedWord = decoded.toString();
-              statusLabel.setText("Find word (from ASCII codes): " + content + " -> " + processedWord);
-            }
-            catch (NumberFormatException e)
-            {
-              statusLabel.setText("Invalid ASCII code format! Using as normal text.");
-              processedWord = content;
-            }
-          }
-          else
-          {
-            // Normal text or regex pattern
-            processedWord = content;
-            statusLabel.setText("Find word (from text): " + processedWord);
-          }
-          
-          CONFIND = processedWord;
-          statusLabel.setText("Current find word/regex: [" + CONFIND + "]");
-          
-          txt.requestFocus();
-        }
-    });
-    m2b.add(xfindItem);
+	JMenuItem xfindItem = getMenuItem("Change Find Word", KeyEvent.VK_B, "CTRL-B");
+	xfindItem.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent evt) {
+			statusLabel.setText("");
+			String content = JOptionPane.showInputDialog(mb,
+				"<html><body>" +
+				"<font color=\"blue\" size=\"5\">Text For Find:</font><br><br>" +
+				"<font color=\"blue\" size=\"4\">" +
+				"You can enter normal text, ASCII codes (;), or Unicode (\\uXXXX).<br>" +
+				"Example 1: apple<br>" +
+				"Example 2: 97;112;112;108;101 (ASCII)<br>" +
+				"Example 3: \\u0061\\u0070\\u0070\\u006c\\u0065 (Unicode)<br><br>" +
+				"<font color=\"red\">" +
+				"NOTE: Regex patterns are supported (e.g., \\d+).<br>" +
+				"The normal 'Find' menu works with plain text only." +
+				"Use regexFind for regex contains expressions." + 
+				"</font>" +
+				"</font>" +
+				"</body></html>");
+
+			if (content == null) {
+				statusLabel.setText("Find word input cancelled!");
+				return;
+			}
+
+			if (content.length() < 1) {
+				statusLabel.setText("Find word is empty!");
+				CONFIND = "";
+				txt.requestFocus();
+				return;
+			}
+
+			String processedWord = content;
+
+			// 1. Check for Unicode format (uXXXX)
+			if (content.contains("\\u") || content.contains("\\U")) {
+				try {
+					processedWord = fromUnicode(content); // Using your existing professional fromUnicode method
+					statusLabel.setText("Find word (from Unicode): " + processedWord);
+				} catch (Exception e) {
+					processedWord = content;
+					statusLabel.setText("Unicode parse error! Using raw text.");
+				}
+			} 
+			// 2. Check for ASCII format (97;98;99)
+			else {
+				boolean isAsciiFormat = true;
+				for (int i = 0; i < content.length(); i++) {
+					char c = content.charAt(i);
+					if (!Character.isDigit(c) && c != ';') {
+						isAsciiFormat = false;
+						break;
+					}
+				}
+
+				if (isAsciiFormat && content.contains(";")) {
+					try {
+						String[] codes = content.split(";");
+						StringBuffer decoded = new StringBuffer();
+						for (String code : codes) {
+							String trimmed = code.trim();
+							if (trimmed.length() > 0) {
+								decoded.append((char) Integer.parseInt(trimmed));
+							}
+						}
+						processedWord = decoded.toString();
+						statusLabel.setText("Find word (from ASCII): " + processedWord);
+					} catch (NumberFormatException e) {
+						processedWord = content;
+						statusLabel.setText("ASCII parse error! Using raw text.");
+					}
+				}
+			}
+
+			CONFIND = processedWord;
+			statusLabel.setText("Current find word/regex: [" + CONFIND + "]");
+			txt.requestFocus();
+		}
+	});
+	m2b.add(xfindItem);
     
     JMenuItem findItem = getMenuItem ("Find", KeyEvent.VK_F, "CTRL-F");
     findItem.addActionListener (new ActionListener ()
@@ -3869,96 +3887,90 @@ implements ActionListener
     });
     m2b.add (convertLatinItem);
     
-    JMenuItem convertUnicode = getMenuItem ("Convert To Unicode", -1, "");
-    convertUnicode.addActionListener (new ActionListener ()
-      {
-        public void actionPerformed (ActionEvent evt)
-        {
-          statusLabel.setText("");
-          String text=txt.getText ();
-          
-          if (text==null)
-          {
-            statusLabel.setText ("Null Text For!");
-            return;
-          }
-          
-          final int len=text.length ();
-          
-          if (len < 1)
-          {
-            statusLabel.setText ("VERY SHORT LENGTH TEXT!");
-            return;
-          }
-          
-          CANKURTARAN=text;
-          
-          String res=null;
-          
-          try
-          {
-            res=toUnicode (text);
-          }
-          catch (Exception e)
-          {
-            e.printStackTrace ();
-            res=null;
-          }
-          
-          if (res != null)
-          {
-            txt.setText (res);
-            txt.setCaretPosition (0x0000);
-          }
-          
-          statusLabel.setText ("The Text has Converted to Unicode Form Successfully");
-          
-          return;
-        }
-    });
-    m2b.add (convertUnicode);
+	// Create the menu item for converting text to Unicode escape sequences
+	JMenuItem convertUnicode = getMenuItem("Convert To Unicode", -1, "");
+	convertUnicode.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent evt) {
+			statusLabel.setText("");
+			
+			// 1. Get only the selected text
+			String selectedText = txt.getSelectedText();
+			
+			// 2. Alert if no text is selected with a stylish dialog
+			if (selectedText == null || selectedText.isEmpty()) {
+				statusLabel.setText("No selection found.");
+				JOptionPane.showMessageDialog(mb, 
+					"<html><b style='color:red; font-size:18pt;'>Selection Required:</b><br>Please select at least one character to convert...</html>", 
+					"Conversion Warning", 
+					JOptionPane.WARNING_MESSAGE);
+				return;
+			}
+
+			// Save original full text as backup (as per your CANKURTARAN logic)
+			CANKURTARAN = txt.getText();
+			
+			String res = null;
+			try {
+				// 3. Process only the selected portion
+				res = toUnicode(selectedText);
+			} catch (Exception e) {
+				e.printStackTrace();
+				statusLabel.setText("Unicode conversion failed!");
+				res = null;
+			}
+
+			// 4. Replace only the selected part with the converted text
+			if (res != null) {
+				// replaceSelection is the most efficient way to swap the selected block
+				txt.replaceSelection(res);
+				statusLabel.setText("Selected text converted to Unicode successfully.");
+			}
+		}
+	});
+	// Add the item to the specific menu group
+	m2b.add(convertUnicode);
     
-    JMenuItem convertFromUnicode = getMenuItem ("Convert From Unicode", -1, "");
-    convertFromUnicode.addActionListener(new ActionListener () {
-        public void actionPerformed(ActionEvent evt) {
-          statusLabel.setText("");
-          String text=txt.getText();
-          
-          if (text==null) {
-            statusLabel.setText("Null Text For!");
-            return;
-          }
-          
-          final int len=text.length ();
-          
-          if (len < 1) {
-            statusLabel.setText ("VERY SHORT LENGTH TEXT!");
-            return;
-          }
-          
-          CANKURTARAN=text;
-          
-          String res = null;
-          
-          try {
-            res = fromUnicode(text);
-          }
-          catch (Exception e) {
-            e.printStackTrace ();
-            res = null;
-          }
-          
-          if (res != null) {
-            txt.setText (res);
-            //txt.setCaretPosition (0x0000);
-          }
-          
-          statusLabel.setText ("The Text has Converted from Unicode Form Successfully");
-          
-          return;
-        }
-    });
-    m2b.add (convertFromUnicode);
+	// Create the menu item for converting Unicode escape sequences back to characters
+	JMenuItem convertFromUnicode = getMenuItem("Convert From Unicode", -1, "");
+	convertFromUnicode.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent evt) {
+			statusLabel.setText("");
+			
+			// 1. Get only the selected portion of the text
+			String selectedText = txt.getSelectedText();
+			
+			// 2. Stylish alert if no text is selected
+			if (selectedText == null || selectedText.isEmpty()) {
+				statusLabel.setText("No selection found.");
+				JOptionPane.showMessageDialog(mb, 
+					"<html><b style='color:red; font-size:18pt;'>Selection Required:</b><br>Please select the Unicode text you wish to decode...</html>", 
+					"Conversion Warning", 
+					JOptionPane.WARNING_MESSAGE);
+				return;
+			}
+
+			// Save original full text as backup for safety
+			CANKURTARAN = txt.getText();
+			
+			String res = null;
+			try {
+				// 3. Convert only the selected Unicode string back to normal characters
+				res = fromUnicode(selectedText);
+			} catch (Exception e) {
+				e.printStackTrace();
+				statusLabel.setText("Unicode decoding failed!");
+				res = null;
+			}
+
+			// 4. Replace the selected block with the decoded text
+			if (res != null) {
+				txt.replaceSelection(res);
+				statusLabel.setText("Selected Unicode form converted back to text successfully.");
+			}
+		}
+	});
+	// Add the item to the specific menu group
+	m2b.add(convertFromUnicode);
     
     m2b.addSeparator();
     
@@ -5957,63 +5969,81 @@ implements ActionListener
         private FCodeURLListener ()
         {}
         
-        public final void actionPerformed (ActionEvent evt)
-        {
-          statusLabel.setText("");
-          try
-          {
-            String s=txt.getText ();
-            int sl=s.length ();
-            if (sl>1024)
-            {
-              JOptionPane.showMessageDialog(mb,
-              "<html><body><font color=\"blue\" size=\"5\">Maximum Text Length Must be <= 1024!!!</font></body></html>");
-              return;
-            }
-            
-            String mm=fdecode (s);
-            
-            txt.setText ("");
-            txt.setText (mm);
-          }
-          catch (Exception e)
-          {
-            e.printStackTrace ();
-          }
-        }
+		public final void actionPerformed(ActionEvent evt) {
+			statusLabel.setText("");
+			try {
+				// 1. Get the selected portion of the text
+				String s = txt.getSelectedText();
+
+				// 2. Stylish alert if no selection is made
+				if (s == null || s.isEmpty()) {
+					statusLabel.setText("No selection found.");
+					JOptionPane.showMessageDialog(mb,
+						"<html><body><font color=\"red\" size=\"5\">Please select the text you want to decode!</font></body></html>",
+						"Selection Required",
+						JOptionPane.WARNING_MESSAGE);
+					return;
+				}
+
+				// 3. Process the selected text (Symmetry limit removed as requested)
+				// 100k+ characters are handled easily by modern JVMs
+				String mm = fdecode(s);
+
+				// 4. Efficiently replace only the highlighted part with the decoded result
+				if (mm != null) {
+					txt.replaceSelection(mm);
+					statusLabel.setText("Decoding completed successfully.");
+				}
+				
+			} catch (Exception e) {
+				// Standard error logging
+				e.printStackTrace();
+				statusLabel.setText("Error: Decoding failed.");
+			}
+		}
         
-        private final String fdecode(String s) throws Exception {
-          if (s == null) return s;
-          
-          ByteArrayOutputStream baos = new ByteArrayOutputStream();
-          int len = s.length();
-          
-          for (int i = 0; i < len; i++) {
-            char c = s.charAt(i);
-            if (c == '%' && i + 2 < len) {
-              // % isaretinden sonraki 2 haneyi hex olarak al
-              String hex = s.substring(i + 1, i + 3);
-              try {
-                int b = Integer.parseInt(hex, 16);
-                baos.write(b);
-                i += 2; // 2 karakter atla
-                } catch (NumberFormatException e) {
-                // Eger hex degilse oldugu gibi birak
-                baos.write(c);
-              }
-              } else {
-              baos.write(c);
-            }
-          }
-          
-          // Encode ederken UTF-8 kullandigin icin
-          // decode ederken de aynisini kullanmalisin
-          return baos.toString("UTF-8");
-        }
+		private final String fdecode(String s) throws Exception {
+			if (s == null || s.isEmpty()) return s;
+
+			int len = s.length();
+			// Use ByteArrayOutputStream to collect bytes and convert them back to UTF-8
+			ByteArrayOutputStream baos = new ByteArrayOutputStream(len);
+
+			for (int i = 0; i < len; i++) {
+				char c = s.charAt(i);
+
+				// Check for percent encoding pattern: %HH
+				if (c == '%' && i + 2 < len) {
+					char h1 = s.charAt(i + 1);
+					char h2 = s.charAt(i + 2);
+
+					// Convert hex characters to integer values
+					int v1 = Character.digit(h1, 16);
+					int v2 = Character.digit(h2, 16);
+
+					// If both characters are valid hex digits (0-9, A-F)
+					if (v1 != -1 && v2 != -1) {
+						int b = (v1 << 4) | v2; // Bitwise operation is faster than Integer.parseInt
+						baos.write(b);
+						i += 2; // Move index forward by 2
+					} else {
+						// Not a valid hex sequence, treat '%' as a normal character
+						baos.write(c);
+					}
+				} else {
+					// Keep the character as is (maps directly to byte for ASCII range)
+					baos.write(c);
+				}
+			}
+
+			// Convert the collected bytes back to String using UTF-8 encoding
+			String result = baos.toString("UTF-8");
+			baos.close();
+			return result;
+		}
         
       }
       //////////////////////
-      /////////////////////
       
       ///////////////////////////
       private final class CodeURLListener
@@ -6023,80 +6053,70 @@ implements ActionListener
         private CodeURLListener ()
         {}
         
-        public final void actionPerformed (ActionEvent evt)
-        {
-          statusLabel.setText("");
-          try
-          {
-            //if (thrcontrol () < 0) return;
-            
-            String s=txt.getText ();
-            int sl=s.length ();
-            if (sl>1024)
-            {
-              JOptionPane.showMessageDialog(mb,
-              "<html><body><font color=\"blue\" size=\"5\">Maximum Text Length Must be <= 1024!!!</font></body></html>");
-              return;
-            }
-            
-            String mm=code (s);
-            
-            txt.setText ("");
-            txt.setText (mm);
-          }
-          catch (Exception e)
-          {
-            e.printStackTrace ();
-          }
-        }
+		public final void actionPerformed(ActionEvent evt) {
+			statusLabel.setText("");
+			try {
+				// 1. Fetch only the selected text from the pane
+				String s = txt.getSelectedText();
+
+				// 2. Alert the user if no text is selected
+				if (s == null || s.isEmpty()) {
+					statusLabel.setText("No selection found.");
+					JOptionPane.showMessageDialog(mb,
+						"<html><body><font color=\"red\" size=\"5\">Please select some text to encode!</font></body></html>",
+						"Selection Required",
+						JOptionPane.WARNING_MESSAGE);
+					return;
+				}
+
+				// 3. Process the selected text using the original code(s) method
+				// 1024 length limit removed to support large selections (100k+ chars)
+				String mm = code(s);
+
+				// 4. Update only the selected portion with the encoded result
+				if (mm != null) {
+					// Using replaceSelection instead of wiping the entire pane
+					txt.replaceSelection(mm);
+					statusLabel.setText("The selected text has been encoded successfully.");
+				}
+				
+			} catch (Exception e) {
+				// Standard error logging for Java 6/7
+				e.printStackTrace();
+				statusLabel.setText("Encoding failed due to an error.");
+			}
+		}
         
-        private final String code (String ch)
-        throws Exception
-        {
-          ByteArrayOutputStream baos=new ByteArrayOutputStream ();
-          OutputStream bos=new BufferedOutputStream (baos);
-          OutputStreamWriter osw=new OutputStreamWriter (bos, "UTF-8");
-          
-          osw.write (ch);
-          osw.flush ();
-          
-          byte [] bits=baos.toByteArray ();
-          int blen=bits.length;
-          int shift=0x00ff;
-          byte b=(byte)'c';
-          
-          char moji='0';
-          
-          StringBuffer sb=new StringBuffer ();
-          
-          for (int i=0; i<blen; i++)
-          {
-            b=bits [i];
-            
-            moji=(char)b;
-            
-            if (((int)moji)<123)
-            {
-              sb.append ((char)b);
-            }
-            else
-            {
-              sb.append ("%");
-              sb.append (Integer.toString ((b&shift), 0x10));
-            }
-          }
-          
-          // sb.append ("\n");
-          
-          String retm=sb.toString ();
-          
-          baos.flush (); baos.close ();
-          bos.flush (); bos.close ();
-          osw.close ();
-          
-          return retm;
-        }
-        
+		private final String code(String ch) throws Exception {
+			if (ch == null || ch.isEmpty()) return ch;
+
+			// Use UTF-8 bytes to ensure correct encoding for non-ASCII characters
+			byte[] bits = ch.getBytes("UTF-8");
+			int blen = bits.length;
+			
+			// Initial capacity set to double the length to avoid resizing
+			StringBuffer sb = new StringBuffer(blen * 2);
+			
+			for (int i = 0; i < blen; i++) {
+				int b = bits[i] & 0xFF; // Unsigned byte conversion
+				
+				// If the character is within safe ASCII range (up to 'z')
+				if (b < 123) {
+					sb.append((char) b);
+				} else {
+					// Percent encoding for special characters
+					sb.append("%");
+					String hex = Integer.toHexString(b);
+					// Ensure two-digit hex (e.g., %0a instead of %a)
+					if (hex.length() < 2) {
+						sb.append('0');
+					}
+					sb.append(hex);
+				}
+			}
+			
+			return sb.toString();
+	     }
       }
       //////////////////////
       
@@ -6447,7 +6467,6 @@ implements ActionListener
         f = new Font (name, stil, size);
         return f;
       }
-      
       
       private final  Font getStyledFont (JTextPane c)
       {
@@ -7324,7 +7343,8 @@ implements ActionListener
         };
         t.start();
       }
-      //
+      
+      //////
       private final class KaydetListener
       implements ActionListener
       {
@@ -7396,92 +7416,82 @@ implements ActionListener
           };
           t.start ();
         }
-      }
-      
-      private final String toUnicode (String text)
-      throws Exception
-      {
-        BufferedReader br=new BufferedReader (new StringReader (text));
-        
-        String line=null;
-        String s="";
-        int cnt=-1;
-        char ch='t';
-        
-        StringBuffer sb=new StringBuffer ();
-        int m=0;
-        
-        while ( (line=br.readLine ()) != null )
-        {
-          cnt=line.length ();
-          
-          for (int i=0; i<cnt; i++)
-          {
-            ch=line.charAt (i);
-            
-            if (ch=='}' || ch=='{' || ch==',' ||
-            ch=='\"' || ch=='\n' || ch=='t')
-            {
-              sb.append (ch);
-              continue;
-            }
-            
-            if (Character.isWhitespace (ch))
-            {
-              sb.append (ch);
-              continue;
-            }
-            
-            m=(int)(ch);
-            
-            if (m<32 || m>122)
-            {
-              s=String.format ("\\u%04x", m);
-              s=s.toUpperCase ();
-              s=s.replace ("\\U", "\\u");
-              sb.append (s);
-            }
-            else
-            {
-              sb.append (ch);
-            }
-          }
-          sb.append ("\n");
-        }
-        
-        br.close ();
-        
-        return sb.toString ();
-      }
-      
-      private final String fromUnicode(String text) throws Exception {
-        if (text == null) return null;
-        
-        StringBuilder sb = new StringBuilder();
-        int i = 0;
-        int len = text.length();
-        
-        while (i < len) {
-          char ch = text.charAt(i);
-          if (ch == '\\' && (i + 5) < len && (text.charAt(i + 1) == 'u' || text.charAt(i + 1) == 'U')) {
-          try {
-            String hex = text.substring(i + 2, i + 6);
-            char unicodeChar = (char) Integer.parseInt(hex, 16);
-            sb.append(unicodeChar);
-            i += 6; // uXXXX toplam 6 slash ile karakter atla
-            } catch (NumberFormatException e) {
-            // Eger format hataliysa orn SLASHuG123, oldugu gibi ekle ve devam et
-            sb.append(ch);
-            i++;
-          }
-          } else {
-          sb.append(ch);
-          i++;
-        }
-      }
-      
-      return sb.toString();
     }
+    //////
+      
+	private final String toUnicode(String text) throws Exception {
+		if (text == null || text.isEmpty()) return text;
+
+		int len = text.length();
+		// Capacity optimization: Unicode strings grow in size
+		StringBuffer sb = new StringBuffer(len * 2);
+
+		for (int i = 0; i < len; i++) {
+			char ch = text.charAt(i);
+			int m = (int) ch;
+
+			// 1. Keep special safe characters and whitespaces as is
+			if (ch == '}' || ch == '{' || ch == ',' || ch == '\"' || ch == '\n' || 
+				ch == '\t' || ch == '\r' || Character.isWhitespace(ch)) {
+				sb.append(ch);
+				continue;
+			}
+
+			// 2. Escape non-ASCII or control characters
+			if (m < 32 || m > 122) {
+				sb.append("\\u");
+				String hex = Integer.toHexString(m).toUpperCase();
+				
+				// Manual padding for 4 digits (Faster than String.format)
+				int hexLen = hex.length();
+				if (hexLen == 1) sb.append("000");
+				else if (hexLen == 2) sb.append("00");
+				else if (hexLen == 3) sb.append("0");
+				
+				sb.append(hex);
+			} else {
+				sb.append(ch);
+			}
+		}
+		return sb.toString();
+	}
+
+	private final String fromUnicode(String text) throws Exception {
+		if (text == null || text.isEmpty()) return text;
+
+		int len = text.length();
+		StringBuilder sb = new StringBuilder(len);
+		int i = 0;
+
+		while (i < len) {
+			char ch = text.charAt(i);
+
+			// Check for u or U pattern
+			if (ch == '\\' && (i + 5) < len && 
+			   (text.charAt(i + 1) == 'u' || text.charAt(i + 1) == 'U')) {
+				
+				// Extract 4 hex digits manually for speed
+				int v1 = Character.digit(text.charAt(i + 2), 16);
+				int v2 = Character.digit(text.charAt(i + 3), 16);
+				int v3 = Character.digit(text.charAt(i + 4), 16);
+				int v4 = Character.digit(text.charAt(i + 5), 16);
+
+				// If all 4 are valid hex digits
+				if (v1 != -1 && v2 != -1 && v3 != -1 && v4 != -1) {
+					int code = (v1 << 12) | (v2 << 8) | (v3 << 4) | v4;
+					sb.append((char) code);
+					i += 6; // Move past uXXXX
+				} else {
+					sb.append(ch);
+					i++;
+				}
+			} else {
+				sb.append(ch);
+				i++;
+			}
+		}
+		return sb.toString();
+	}
     
     private static final void ekran() {
       // Create necessary directory if it doesn't exist

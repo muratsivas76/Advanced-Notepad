@@ -1,0 +1,5 @@
+--- DETAILED UNUSED ITEMS REPORT ---
+Target File: NotDefteriX.java
+----------------------------------------------
+----------------------------------------------
+Toplam Supheli Oge: 0

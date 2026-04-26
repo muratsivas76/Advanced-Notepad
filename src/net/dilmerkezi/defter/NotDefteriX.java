@@ -90,12 +90,7 @@ implements ActionListener
   private final Vector <String> ACTUALVEC = new Vector <String> ();
   
   private final Font TXTFONT = new Font ("Comic Sans MS", Font.PLAIN, 30);
-  
-  //private final float LFFONTSIZE = 16.0f;
-  
-  private final Color BGCOLOR=Color.WHITE;
-  private final Color FGCOLOR=Color.BLUE;
-  
+    
   private final String START_FN = "#################@";
   private final String END_FN = "#################&";
   
@@ -151,23 +146,21 @@ implements ActionListener
   private String CONFIND="";
   
   /** Undo manager*/
-  protected static final UndoManager umngr = new UndoManager ();
+  protected final UndoManager umngr = new UndoManager ();
   
   /** Undoable listener*/
-  protected static final UndoableEditListener ulis = new OwnUndoListener ();
+  protected final UndoableEditListener ulis = new OwnUndoListener ();
   
   /** Undo action*/
-  protected static final UndoAction uaction = new UndoAction ();
+  protected final UndoAction uaction = new UndoAction ();
   
   /** Redo action*/
-  protected static final RedoAction raction = new RedoAction ();
+  protected final RedoAction raction = new RedoAction ();
   
   private final JEditorPane helpTextArea = new JEditorPane();
   
   private final SimpleAttributeSet emptset=new SimpleAttributeSet ();
-  
-  private boolean isEntered = false;
-  
+    
   private int imgscr=0;
   
   //START OF CONSTRUCTOR METHOD
@@ -2628,66 +2621,65 @@ implements ActionListener
     
     beatm.addSeparator ();
     
-    JMenuItem replaceTodoItem = getMenuItem ("Beautify Text", KeyEvent.VK_T, "CTRL-T");
-    replaceTodoItem.addActionListener (new ActionListener ()
-      {
-        public void actionPerformed (ActionEvent evt)
-        {
-          statusLabel.setText("");
-          String m=txt.getText ();
-          
-          if (m==null)
-          {
-            statusLabel.setText ("Null Text for Beutify Operation!");
-            return;
-          }
-          
-          if (m.length () < 1)
-          {
-            statusLabel.setText ("Zero Length Text for Beautify Operation!");
-            return;
-          }
-          
-          CANKURTARAN=m;
-          
-          V2Utils.setBorrowNums (false);
-          
-          String movitext=null;
-          
-          boolean error=false;
-          
-          try
-          {
-            String ntext=V2UTFToISO.cnt (m);
-            if (error == false)
-            {
-              movitext=ntext;
-            }
-          }
-          catch (IOException ioe)
-          {
-            error=true;
-            movitext=null;
-          }
-          
-          if (error)
-          {
-            statusLabel.setText ("Un error ocurred V2UTFToISO.");
-            return;
-          }
-          
-          if (movitext != null)
-          {
-            txt.setText (movitext);
-            txt.setCaretPosition (0x0000);
-            
-            txt.requestFocus ();
-          }
-          
-          return;
-        }
-    });
-    beatm.add (replaceTodoItem);
+	JMenuItem replaceTodoItem = getMenuItem("Beautify Text", KeyEvent.VK_T, "CTRL-T");
+	replaceTodoItem.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent evt) {
+			statusLabel.setText("");
+			final String m = txt.getText(); 
+			// final keyword for access inside inner class
+
+			if (m == null) {
+				statusLabel.setText("Null Text for Beutify Operation!");
+				return;
+			}
+
+			if (m.length() < 1) {
+				statusLabel.setText("Zero Length Text for Beautify Operation!");
+				return;
+			}
+
+			CANKURTARAN = m;
+			V2Utils.setBorrowNums(false);
+
+			String movitext = null;
+			boolean error = false;
+
+			try {
+				String ntext = V2UTFToISO.cnt(m);
+				if (error == false) {
+					movitext = ntext;
+				}
+			} catch (IOException ioe) {
+				error = true;
+				movitext = null;
+			}
+
+			if (error) {
+				statusLabel.setText("An error occurred V2UTFToISO.");
+				return;
+			}
+
+			if (movitext != null) {
+				// Define final variable for thread safety inside Runnable
+				final String finalMovitext = movitext;
+
+				// Start the UI update safely on the Event Dispatch Thread
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						txt.setText(finalMovitext);
+						txt.setCaretPosition(0);
+						
+						// Force the layout manager to recalculate word wraps correctly
+						txt.revalidate();
+						txt.repaint();
+						
+						txt.requestFocus();
+					}
+				});
+			}
+		}
+	});
+	beatm.add(replaceTodoItem);
     
     mb.add (beatm);
     
@@ -3369,7 +3361,8 @@ implements ActionListener
 			// 1. Check for Unicode format (uXXXX)
 			if (content.contains("\\u") || content.contains("\\U")) {
 				try {
-					processedWord = fromUnicode(content); // Using your existing professional fromUnicode method
+					processedWord = fromUnicode(content); 
+					// Using your existing professional fromUnicode method
 					statusLabel.setText("Find word (from Unicode): " + processedWord);
 				} catch (Exception e) {
 					processedWord = content;
@@ -4722,6 +4715,55 @@ implements ActionListener
         });
         countMenu.add (selcountItem);
         
+        countMenu.addSeparator();
+        
+		JMenuItem txtInfoItem = getMenuItem("Text Pane Information", -1, "");
+		txtInfoItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				statusLabel.setText("");
+
+				// Convert Colors to Hex format
+				String fg = String.format("#%06X", (txt.getForeground().getRGB() & 0xFFFFFF));
+				String bg = String.format("#%06X", (txt.getBackground().getRGB() & 0xFFFFFF));
+				String sel = String.format("#%06X", (txt.getSelectionColor().getRGB() & 0xFFFFFF));
+				String caret = String.format("#%06X", (txt.getCaretColor().getRGB() & 0xFFFFFF));
+				//String selText = String.format("#%06X", (txt.getSelectedTextColor().getRGB() & 0xFFFFFF));
+
+				// Determine Font Style
+				String style = "Plain";
+				if (txt.getFont().isBold() && txt.getFont().isItalic()) style = "Bold Italic";
+				else if (txt.getFont().isBold()) style = "Bold";
+				else if (txt.getFont().isItalic()) style = "Italic";
+
+				// Get Margin Information
+				java.awt.Insets m = txt.getMargin();
+				String marginInfo = "T:" + m.top + " L:" + m.left + " B:" + m.bottom + " R:" + m.right;
+
+				// Create HTML with 2x larger fonts and specific colors
+				// Key: Red (#FF0000), Value: Blue (#0000FF)
+				String msg = "<html><body style='width: 450px; font-family: sans-serif; font-size: 20pt; padding: 15px;'>"
+						+ "<h1 style='color: #2C3E50; border-bottom: 3px solid #3498DB; font-size: 24pt;'>Component Info</h1>"
+						+ "<table border='0' cellpadding='8' style='font-size: 18pt;'>"
+						+ "<tr><td style='color: red;'><b>Font Family:</b></td><td style='color: blue;'>" + txt.getFont().getFamily() + "</td></tr>"
+						+ "<tr><td style='color: red;'><b>Font Size:</b></td><td style='color: blue;'>" + txt.getFont().getSize() + " pt</td></tr>"
+						+ "<tr><td style='color: red;'><b>Font Style:</b></td><td style='color: blue;'>" + style + "</td></tr>"
+						+ "<tr><td style='color: red;'><b>Foreground:</b></td><td style='color: blue;'>" + fg + "</td></tr>"
+						+ "<tr><td style='color: red;'><b>Background:</b></td><td style='color: blue;'>" + bg + "</td></tr>"
+						+ "<tr><td style='color: red;'><b>Selection Text:</b></td><td style='color: blue;'>" + sel + "</td></tr>"
+						+ "<tr><td style='color: red;'><b>Caret Color:</b></td><td style='color: blue;'>" + caret + "</td></tr>"
+						+ "<tr><td style='color: red;'><b>Margins:</b></td><td style='color: blue;'>" + marginInfo + "</td></tr>"
+						+ "<tr><td colspan='2'><hr style='border: 0; border-top: 2px solid #CCC;'></td></tr>"
+						+ "<tr><td style='color: red;'><b>Doc Length:</b></td><td style='color: blue;'>" + txt.getDocument().getLength() + "</td></tr>"
+						+ "<tr><td style='color: red;'><b>Editable:</b></td><td style='color: blue;'>" + (txt.isEditable() ? "Yes" : "No") + "</td></tr>"
+						+ "</table></body></html>";
+
+				JOptionPane.showMessageDialog(null, msg, "Detailed Statistics", JOptionPane.INFORMATION_MESSAGE);
+			}
+		});
+		countMenu.add(txtInfoItem);
+        
+        countMenu.addSeparator();
+        
         JMenuItem otherCountItem = getMenuItem ("Other Text Information", -1, "");
         otherCountItem.addActionListener (new ActionListener ()
           {
@@ -5836,131 +5878,84 @@ implements ActionListener
         
         return;
       }
-      
-      ///////////////////////
-      /** Undoable edit listener implementation*/
-      private static final class 		OwnUndoListener
-      implements	UndoableEditListener
-      {
-        
-        /**
-         * Called when undoable edit happened
-         *
-         * @param e Undoable edit event
-         */
-        public void undoableEditHappened (UndoableEditEvent e)
-        {
-          umngr.addEdit (e.getEdit ());
-          uaction.again ();
-          raction.again ();
-        }
-        
-      }
-      ///////////////////////
-      
-      /** Reset undo process*/
-      protected void resetUndo ()
-      {
-        umngr.discardAllEdits ();
-        uaction.again ();
-        raction.again ();
-      }
-      
-      //////////////////
-      /** Undo action*/
-      private static final    class 	UndoAction
-      extends 	AbstractAction
-      {
-        
-        /** Constructor*/
-        private UndoAction ()
-        {
-          super ("Undo-Action");
-          setEnabled (false);
-        }
-        
-        /** @param evt Action event*/
-        public void actionPerformed (ActionEvent evt)
-        {
-          try
-          {
-            umngr.undo ();
-          }
-          catch (Exception uex)
-          {
-            System.out.println ("There is not character for undo: "+uex.getMessage ()+"");
-            return;
-          }
-          again ();
-          raction.again ();
-        }
-        
-        /** Update undo action*/
-        protected void again ()
-        {
-          boolean canu = umngr.canUndo ();
-          if (!canu)
-          {
-            setEnabled (false);
-            putValue (Action.NAME, "Undo-Action");
-          }
-          else
-          {
-            setEnabled (true);
-            putValue (Action.NAME, umngr.getUndoPresentationName ());
-          }
-        }
-        
-      }
-      ///////////////////
-      
-      //////////////////
-      /** Redo action*/
-      private static final    class 	RedoAction
-      extends 	AbstractAction
-      {
-        
-        /** Constructor*/
-        private RedoAction ()
-        {
-          super ("Redo-Action");
-          setEnabled (false);
-        }
-        
-        /** @param evt Action event*/
-        public void actionPerformed (ActionEvent evt)
-        {
-          try
-          {
-            umngr.redo ();
-          }
-          catch (Exception uex)
-          {
-            uex.printStackTrace();
-            return;
-          }
-          again ();
-          uaction.again ();
-        }
-        
-        /** Update redo action*/
-        protected void again ()
-        {
-          boolean canu = umngr.canRedo ();
-          if (!canu)
-          {
-            setEnabled (false);
-            putValue (Action.NAME, "Redo-Action");
-          }
-          else
-          {
-            setEnabled (true);
-            putValue (Action.NAME, umngr.getRedoPresentationName ());
-          }
-        }
-        
-      }
-      ///////////////////
+ 
+	   ////////////     
+	   /** Undoable edit listener implementation */
+	   private final class OwnUndoListener implements UndoableEditListener {
+			public void undoableEditHappened(final UndoableEditEvent e) {
+				// More clear by invokeLater
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						umngr.addEdit(e.getEdit());
+						updateActions();
+					}
+				});
+			}
+		}
+
+		/** Update from one location. This is more safe. */
+		protected void updateActions() {
+			if (uaction != null) uaction.again();
+			if (raction != null) raction.again();
+		}
+
+		/** Reset undo process */
+		protected void resetUndo() {
+			umngr.discardAllEdits();
+			updateActions();
+		}
+
+		/** Undo action */
+		private final class UndoAction extends AbstractAction {
+			private UndoAction() {
+				super("Undo");
+				setEnabled(false);
+			}
+
+			public void actionPerformed(ActionEvent evt) {
+				try {
+					if (umngr.canUndo()) {
+						umngr.undo();
+					}
+				} catch (Exception uex) {
+					System.err.println("Undo Error: " + uex.getMessage());
+				}
+				updateActions();
+			}
+
+			protected void again() {
+				boolean canu = umngr.canUndo();
+				setEnabled(canu);
+				putValue(Action.NAME, canu ? umngr.getUndoPresentationName() : "Undo");
+			}
+		}
+
+		/** Redo action */
+		private final class RedoAction extends AbstractAction {
+			private RedoAction() {
+				super("Redo");
+				setEnabled(false);
+			}
+
+			public void actionPerformed(ActionEvent evt) {
+				try {
+					if (umngr.canRedo()) {
+						umngr.redo();
+					}
+				} catch (Exception uex) {
+					System.err.println("Redo Error: " + uex.getMessage());
+				}
+				updateActions();
+			}
+
+			protected void again() {
+				boolean canu = umngr.canRedo();
+				setEnabled(canu);
+				putValue(Action.NAME, canu ? umngr.getRedoPresentationName() : "Redo");
+			}
+	  }
+	  ///////////////
+
       ///////////////////////////
       private final class FCodeURLListener
       implements ActionListener
@@ -6519,28 +6514,7 @@ implements ActionListener
         
         return f;
       }
-      
-      private final String replacePageNums (String str)
-      {
-        if (str==null) return " ";
-        
-        final int BARS=750;
-        
-        int strlen=str.length ();
-        if (strlen<BARS) return str;
-        
-        final int SFNUM=strlen/BARS;
-        
-        for (int i=1; i<=SFNUM; i++)
-        {
-          str=str.replaceAll (("\n"+Integer.toString (i)+"\n\n"), ("\n"));
-          str=str.replaceAll (("\n\n"+Integer.toString (i)+"\n"), ("\n"));
-          str=str.replaceAll (("\n"+Integer.toString (i)+"\n"), ("\n"));
-        }
-        
-        return str;
-      }
-      
+       
       private final boolean sfnum (String str)
       {
         boolean issf=true;
@@ -6561,171 +6535,6 @@ implements ActionListener
         }
         
         return issf;
-      }
-      
-      private final String getDesignedText (String oldi)
-      {
-        String m=oldi;
-        StringBuffer sb=new StringBuffer ("");
-        
-        try
-        {
-          StringReader sr=new StringReader (m);
-          BufferedReader br=new BufferedReader (sr);
-          
-          String line=null;
-          char chrm=',';
-          int linelen=0;
-          
-          while ( (line=br.readLine ()) != null )
-          {
-            line=line.trim ();
-            if (line.equals ("") || line.length()<1)
-            {
-              sb.append ("\n\n");
-              continue;
-            }
-            
-            if (sfnum (line)) continue;
-            
-            linelen=line.length ();
-            
-            if (linelen <= 72)
-            {
-              char chm=line.charAt (0);
-              if (Character.isUpperCase (chm))
-              {
-                line=(line+"\n\n");
-              }
-            }
-            
-            chrm=line.charAt (linelen-1);
-            
-            if (Character.isUpperCase (chrm))
-            {
-              sb.append (line);
-              sb.append ("\n\n");
-              continue;
-            }
-            
-            sb.append (line);
-            sb.append (" ");
-          }
-          
-          br.close ();
-          sr.close ();
-        }
-        catch (Exception e)
-        {
-          e.printStackTrace ();
-          return " ";
-        }
-        
-        sb.append (" ");
-        
-        return sb.toString ();
-      }
-      
-      private final String getNumberedText (String oldi)
-      {
-        String m=oldi;
-        StringBuffer sb=new StringBuffer ("");
-        
-        try
-        {
-          StringReader sr=new StringReader (m);
-          BufferedReader br=new BufferedReader (sr);
-          
-          String line=null;
-          final String STT="Line Num --> ";
-          
-          int syc=0;
-          
-          while ( (line=br.readLine ()) != null )
-          {
-            if (line.startsWith (STT))
-            {
-              sb.append (line);
-              sb.append ("\n");
-              continue;
-            }
-            sb.append (STT);
-            sb.append (Integer.toString (++syc));
-            sb.append (": ");
-            sb.append (line);
-            sb.append ("\n");
-          }
-          
-          br.close ();
-          sr.close ();
-        }
-        catch (Exception e)
-        {
-          e.printStackTrace ();
-          return " ";
-        }
-        
-        sb.append (" ");
-        
-        return sb.toString ();
-      }
-      
-      private final String getNonNumberedText (String oldi)
-      {
-        String m=oldi;
-        StringBuffer sb=new StringBuffer ("");
-        
-        try
-        {
-          StringReader sr=new StringReader (m);
-          BufferedReader br=new BufferedReader (sr);
-          
-          String line=null;
-          final String NNOK=":";
-          final String STT="Line Num --> ";
-          
-          int syc=0;
-          int index=0;
-          
-          while ( (line=br.readLine ()) != null )
-          {
-            ++syc;
-            
-            if ( ((line.startsWith (STT))==false) )
-            {
-              sb.append (line);
-              sb.append ("\n");
-              continue;
-            }
-            
-            index=line.indexOf (NNOK);
-            
-            if (index<0)
-            {
-              statusLabel.setText ("Warning: There might be an error in " + (syc) + " numbered line!");
-              sb.append (line);
-              sb.append ("\n");
-              continue;
-            }
-            
-            line=line.substring (index+1);
-            
-            sb.append (line);
-            sb.append ("\n");
-          }
-          
-          br.close ();
-          sr.close ();
-        }
-        catch (Exception e)
-        {
-          e.printStackTrace ();
-          return " ";
-        }
-        
-        sb.append (" ");
-        
-        return sb.toString ();
       }
       
       private final void setCharCode ()

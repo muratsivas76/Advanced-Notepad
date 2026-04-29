@@ -65,7 +65,7 @@ implements ActionListener
   
   private final JMenuBar mb = new JMenuBar ();
   
-  private final JTextPane txt = new JTextPane ();
+  private final MTextPane txt = new MTextPane ();
   
   private final PostScriptExporter PSPRINTER = new PostScriptExporter();
   
@@ -89,7 +89,7 @@ implements ActionListener
   private final Vector <String> KONTROLVEC = new Vector <String> ();
   private final Vector <String> ACTUALVEC = new Vector <String> ();
   
-  private final Font TXTFONT = new Font ("Comic Sans MS", Font.PLAIN, 30);
+  private final Font TXTFONT = new Font ("Monospaced", Font.PLAIN, 23);
     
   private final String START_FN = "#################@";
   private final String END_FN = "#################&";
@@ -174,6 +174,7 @@ implements ActionListener
     
     jfc.setFileFilter(new TextFileFilter());
     iconjfc.setFileFilter(new IconFileFilter());
+    iconjfc.setAccessory(new ImagePreview(iconjfc)); // Setup the preview accessory
     objjfc.setFileFilter(new ObjectFileFilter());
     rtfjfc.setFileFilter(new RTFFileFilter());
     encjfc.setFileFilter(new ENCFileFilter());
@@ -362,6 +363,7 @@ implements ActionListener
                         // Set kit only when we are sure we have the data
                         txt.setEditorKit(new StyledEditorKit());
                         txt.setText(content);
+                        myfocus();
                         txt.setCaretPosition(0);
                         statusLabel.setText("Opened and Decrypted: " + fileName);
                       }
@@ -695,7 +697,7 @@ implements ActionListener
 				statusLabel.setText("Error during cleaning process!");
 			}
 
-			txt.requestFocus();
+			myfocus();
 		}
 	});
 	// Add the menu item to the specific menu group
@@ -788,25 +790,11 @@ implements ActionListener
           
           int klen=ssm.length ();
           
-          int pos=txt.getCaretPosition ();
-          
           txt.setText (ssm);
-          
-          if (pos >= 0x0000 && pos<klen)
-          {
-            txt.setCaretPosition (pos);
-          }
-          else
-          {
-            txt.setCaretPosition (0x0000);
-          }
-          
-          //txt.setText (ssm);
-          //txt.setCaretPosition (0);
-          
+                
           statusLabel.setText ("Control Chars Operation is Okey!");
           
-          txt.requestFocus ();
+          myfocus();
           
           return;
         }
@@ -910,19 +898,8 @@ implements ActionListener
             String mline=sb.toString ();
             
             int klen=mline.length ();
-            
-            int pos=txt.getCaretPosition ();
-            
+  
             txt.setText (mline);
-            
-            if (pos >= 0x0000 && pos<klen)
-            {
-              txt.setCaretPosition (pos);
-            }
-            else
-            {
-              txt.setCaretPosition (0x0000);
-            }
             
             statusLabel.setText ("Removed words: "+input+"");
             
@@ -934,7 +911,7 @@ implements ActionListener
             ioe.printStackTrace ();
           }
           
-          txt.requestFocus ();
+          myfocus();
           
           return;
         }
@@ -1021,19 +998,8 @@ implements ActionListener
             String mline=sb.toString ();
             
             int klen=mline.length ();
-            
-            int pos=txt.getCaretPosition ();
-            
+                        
             txt.setText (mline);
-            
-            if (pos >= 0x0000 && pos<klen)
-            {
-              txt.setCaretPosition (pos);
-            }
-            else
-            {
-              txt.setCaretPosition (0x0000);
-            }
             
             statusLabel.setText ("Removed Page Numbers.");
           }
@@ -1042,7 +1008,7 @@ implements ActionListener
             ioe.printStackTrace ();
           }
           
-          txt.requestFocus ();
+          myfocus();
           
           return;
         }
@@ -1229,21 +1195,8 @@ implements ActionListener
             String mline=sb.toString ();
             
             int klen=mline.length ();
-            
-            int pos=txt.getCaretPosition ();
-            
-            txt.setText (mline);
-            
-            if (pos >= 0x0000 && pos<klen)
-            {
-              txt.setCaretPosition (pos);
-            }
-            else
-            {
-              txt.setCaretPosition (0x0000);
-            }
-            
-            //  txt.requestFocus ();
+    
+            txt.setText (mline);           
             
             statusLabel.setText ("Removed Chars Bigger Than: "+(Integer.toString (MIL))+"");
             
@@ -1255,7 +1208,7 @@ implements ActionListener
             ioe.printStackTrace ();
           }
           
-          txt.requestFocus ();
+          myfocus();
           
           return;
         }
@@ -1352,22 +1305,9 @@ implements ActionListener
             String mline=sb.toString ();
             
             int klen=mline.length ();
-            
-            int pos=txt.getCaretPosition ();
-            
+              
             txt.setText (mline);
-            
-            if (pos >= 0x0000 && pos<klen)
-            {
-              txt.setCaretPosition (pos);
-            }
-            else
-            {
-              txt.setCaretPosition (0x0000);
-            }
-            
-            //  txt.requestFocus ();
-            
+                    
             statusLabel.setText ("Removed Chars Lesser Than: "+(Integer.toString (MIL))+"");
             
             br.close ();
@@ -1378,7 +1318,7 @@ implements ActionListener
             ioe.printStackTrace ();
           }
           
-          txt.requestFocus ();
+          myfocus();
           
           return;
         }
@@ -1456,22 +1396,9 @@ implements ActionListener
             String mline=sb.toString ();
             
             int klen=mline.length ();
-            
-            int pos=txt.getCaretPosition ();
-            
+                    
             txt.setText (mline);
-            
-            if (pos >= 0x0000 && pos<klen)
-            {
-              txt.setCaretPosition (pos);
-            }
-            else
-            {
-              txt.setCaretPosition (0x0000);
-            }
-            
-            //  txt.requestFocus ();
-            
+
             statusLabel.setText ("Removed Lines Starts With: "+input+"");
             
             br.close ();
@@ -1482,7 +1409,7 @@ implements ActionListener
             ioe.printStackTrace ();
           }
           
-          txt.requestFocus ();
+          myfocus();
           
           return;
         }
@@ -1564,19 +1491,8 @@ implements ActionListener
             String mline=sb.toString ();
             
             int klen=mline.length ();
-            
-            int pos=txt.getCaretPosition ();
-            
-            txt.setText (mline);
-            
-            if (pos >= 0x0000 && pos<klen)
-            {
-              txt.setCaretPosition (pos);
-            }
-            else
-            {
-              txt.setCaretPosition (0x0000);
-            }
+               
+            txt.setText (mline);     
             
             statusLabel.setText ("Removed Lines Contains: "+input+"");
             
@@ -1588,7 +1504,7 @@ implements ActionListener
             ioe.printStackTrace ();
           }
           
-          txt.requestFocus ();
+          myfocus();
           
           return;
         }
@@ -1670,21 +1586,8 @@ implements ActionListener
             String mline=sb.toString ();
             
             int klen=mline.length ();
-            
-            int pos=txt.getCaretPosition ();
-            
-            txt.setText (mline);
-            
-            if (pos >= 0x0000 && pos<klen)
-            {
-              txt.setCaretPosition (pos);
-            }
-            else
-            {
-              txt.setCaretPosition (0x0000);
-            }
-            
-            //  txt.requestFocus ();
+               
+            txt.setText (mline); 
             
             statusLabel.setText ("Removed Lines Contains: "+input+"");
             
@@ -1696,7 +1599,7 @@ implements ActionListener
             ioe.printStackTrace ();
           }
           
-          txt.requestFocus ();
+          myfocus();
           
           return;
         }
@@ -1815,20 +1718,9 @@ implements ActionListener
             
             String mline=sb.toString ();
             int klen=mline.length ();
-            
-            int pos=txt.getCaretPosition ();
-            
+                   
             txt.setText (mline);
-            
-            if (pos >= 0x0000 && pos<klen)
-            {
-              txt.setCaretPosition (pos);
-            }
-            else
-            {
-              txt.setCaretPosition (0x0000);
-            }
-            
+     
             statusLabel.setText ("Replaced words: "+input+"");
             
             br.close ();
@@ -1839,7 +1731,7 @@ implements ActionListener
             ioe.printStackTrace ();
           }
           
-          txt.requestFocus ();
+          myfocus();
           
           return;
         }
@@ -1897,20 +1789,8 @@ implements ActionListener
             String k=mm.replace (srcreps, dstreps);
             int klen=k.length ();
             
-            int pos=txt.getCaretPosition ();
-            
-            //txt.setText ("");
             txt.setText (k);
-            
-            if (pos >= 0x0000 && pos<klen)
-            {
-              txt.setCaretPosition (pos);
-            }
-            else
-            {
-              txt.setCaretPosition (0x0000);
-            }
-            
+       
             statusLabel.setText ("Replace Operation is Okey: "+srcreps+" --> "+dstreps+"");
           }
           catch (Exception e)
@@ -1919,7 +1799,7 @@ implements ActionListener
             return;
           }
           
-          txt.requestFocus ();
+          myfocus();
           
           return;
         }
@@ -2008,19 +1888,8 @@ implements ActionListener
             dstreps = dstreps.replace("\0", "");
             String k=mm.replace (srcreps, dstreps);
             int klen=k.length ();
-            
-            int pos=txt.getCaretPosition ();
-            
+               
             txt.setText (k);
-            
-            if (pos >= 0x0000 && pos<klen)
-            {
-              txt.setCaretPosition (pos);
-            }
-            else
-            {
-              txt.setCaretPosition (0x0000);
-            }
             
             statusLabel.setText ("Specific Replace Operation is Okey: "+xsrcreps+" --> "+xdstreps+"");
           }
@@ -2031,7 +1900,7 @@ implements ActionListener
             return;
           }
           
-          txt.requestFocus ();
+          myfocus();
           
           return;
         }
@@ -2166,19 +2035,9 @@ implements ActionListener
           try
           {
             int klen = result.length();
-            int pos = txt.getCaretPosition();
-            
+    
             txt.setText(result);
-            
-            if (pos >= 0 && pos < klen)
-            {
-              txt.setCaretPosition(pos);
-            }
-            else
-            {
-              txt.setCaretPosition(0);
-            }
-            
+   
             statusLabel.setText("Multi Specific Replace Operation Completed Successfully!");
           }
           catch (Exception e)
@@ -2187,7 +2046,7 @@ implements ActionListener
             e.printStackTrace();
           }
           
-          txt.requestFocus();
+          myfocus();
         }
     });
     beatm.add(multiSreplaceItem);
@@ -2368,25 +2227,9 @@ implements ActionListener
             k=sb.toString ();
             
             int klen=k.length ();
-            
-            int pos=txt.getCaretPosition ();
-            
-            //txt.setText ("");
+                  
             txt.setText (k);
-            
-            //txt.requestFocus ();
-            
-            if (pos >= 0x0000 && pos<klen)
-            {
-              txt.setCaretPosition (pos);
-            }
-            else
-            {
-              txt.setCaretPosition (0x0000);
-            }
-            
-            //txt.setText (k);
-            
+
             statusLabel.setText ("Excepcional Replace Operation is Okey.");
           }
           catch (Exception e)
@@ -2395,7 +2238,7 @@ implements ActionListener
             return;
           }
           
-          txt.requestFocus ();
+          myfocus();
           
           return;
         }
@@ -2445,20 +2288,26 @@ implements ActionListener
             defaultTo
           );
           
-          if (to == null) return;
+          if (to == null) {
+			  myfocus();
+			  return;
+          }
           
           String safeDangerous = ProductionRegexSafetyCheck.checkForLargeText(from, (long)textlength);
           statusLabel.setText("REGEX SAFETY LEVEL: " + safeDangerous);
           if ("DANGEROUS".equals(safeDangerous)) {
             String s = JOptionPane.showInputDialog(mb,
             "<html><body><font color=\"#0000BB\" size=\"5\">This regex may be dangerous.<br>Do you want to continue(ignoreCase e/yes/y/t || h/no/n)?</font></body></html>");
-            if (s == null) return;
-            
+            if (s == null) {
+				myfocus();
+				return;
+            }
             s = s.toLowerCase();
             if (s.equals("e") == false &&
               s.equals("yes") == false &&
               s.equals("y") == false &&
               s.equals("t") == false) {
+			  myfocus();
               return; // İşlemi baslatma
             }
           }
@@ -2486,17 +2335,10 @@ implements ActionListener
               try {
                 // Task finished, get the result
                 String result = get();
-                int originalPos = txt.getCaretPosition();
                 
                 // Update UI with the new text
                 txt.setText(result);
-                
-                // Safely restore caret position
-                if (originalPos >= 0 && originalPos < result.length()) {
-                  txt.setCaretPosition(originalPos);
-                  } else {
-                  txt.setCaretPosition(0);
-                }
+                myfocus();
                 
                 statusLabel.setText("Regex Replace (SwingWorker) completed successfully.");
               }
@@ -2513,6 +2355,7 @@ implements ActionListener
                 e.printStackTrace();
               }
               finally {
+				myfocus();
                 // Always restore the default cursor
                 txt.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
               }
@@ -2670,10 +2513,7 @@ implements ActionListener
 						txt.setCaretPosition(0);
 						
 						// Force the layout manager to recalculate word wraps correctly
-						txt.revalidate();
-						txt.repaint();
-						
-						txt.requestFocus();
+						myfocus();
 					}
 				});
 			}
@@ -2767,6 +2607,7 @@ implements ActionListener
 
 			// 4. Show the dialog
 			JOptionPane.showMessageDialog(mb, sb.toString(), "Character Details", JOptionPane.INFORMATION_MESSAGE);
+			myfocus();
 		}
 	});
 	// Add to menu
@@ -2818,6 +2659,7 @@ implements ActionListener
           String nc=sb.toString ();
           
           JOptionPane.showMessageDialog(mb, ("<html><body><font color=\"blue\" size=\"5\">"+Integer.toString (val)+" -> "+nc+"</font></body></html>"));
+          myfocus();
           return;
         }
     });
@@ -2874,6 +2716,7 @@ implements ActionListener
           try {
             int pos = txt.getCaretPosition();
             txt.getDocument().insertString(pos, nc, null);
+            myfocus();
             return;
             } catch (BadLocationException e) {
             JOptionPane.showMessageDialog(mb, e.getMessage());
@@ -2908,6 +2751,7 @@ implements ActionListener
           
           // Append text to current caret pos.
           txt.replaceSelection(formatlanmisZaman);
+          myfocus();
         }
     });
     m2a.add(timeStampItem);
@@ -2954,7 +2798,7 @@ implements ActionListener
                 
                 // Add a trailing space after the icon for better text flow
                 txt.getDocument().insertString(txt.getCaretPosition(), " ", null);
-                
+                myfocus();
                 } catch (NumberFormatException nfe) {
                 JOptionPane.showMessageDialog(mb, "Invalid number! Please use '300*200' format.");
                 } catch (Exception ex) {
@@ -2968,6 +2812,20 @@ implements ActionListener
     m2a.add(insertIconItem);
     
     m2a.addSeparator ();
+    
+	JMenuItem ipsumItem = getMenuItem("Insert Ipsum", -1, "");
+	ipsumItem.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent evt) {
+			statusLabel.setText("");
+			try {
+				int pos = txt.getCaretPosition();
+				txt.getDocument().insertString(pos, Help.IPSUM, null);
+			} catch (Exception e) {
+				statusLabel.setText("Error: Could not append ipsum; " + e.getMessage());
+			}
+		}
+	});
+	m2a.add(ipsumItem);
     
     JMenuItem enterEmojiItem = getMenuItem ("Convert Hex to Emoji", -1, "");
     enterEmojiItem.addActionListener (new ActionListener ()
@@ -3041,6 +2899,7 @@ implements ActionListener
           String content=convertToAscii(selected);
           
           txt.replaceSelection(content);
+          myfocus();
           
           return;
         }
@@ -3050,277 +2909,249 @@ implements ActionListener
     
     m2b.addSeparator();
     
-    JMenuItem selToUpperItem = getMenuItem ("Selection to UpperCase", KeyEvent.VK_U, "CTRL-U");
-    selToUpperItem.addActionListener (new ActionListener ()
-      {
-        public void actionPerformed (ActionEvent evt)
-        {
-          statusLabel.setText("");
-          String selected=txt.getSelectedText ();
-          if (selected==null)
-          {
-            statusLabel.setText ("There is Not Selected Text!");
-            return;
-          }
-          
-          if (selected.length () < 1)
-          {
-            statusLabel.setText ("There is Not Selected Text!");
-            return;
-          }
-          
-          String content=selected.toUpperCase ();
-          
-          txt.replaceSelection (content);
-          
-          return;
-        }
-      }
-    );
-    m2b.add (selToUpperItem);
-    
-    m2b.addSeparator ();
-    
-    JMenuItem selToLowerItem = getMenuItem ("Selection to LowerCase", -1, "");
-    selToLowerItem.addActionListener (new ActionListener ()
-      {
-        public void actionPerformed (ActionEvent evt)
-        {
-          statusLabel.setText("");
-          String selected=txt.getSelectedText ();
-          if (selected==null)
-          {
-            statusLabel.setText ("There is Not Selected Text!");
-            return;
-          }
-          
-          if (selected.length () < 1)
-          {
-            statusLabel.setText ("There is Not Selected Text!");
-            return;
-          }
-          
-          String content=selected.toLowerCase ();
-          
-          txt.replaceSelection (content);
-          
-          return;
-        }
-      }
-    );
-    m2b.add (selToLowerItem);
-    
+	// Item creation with custom helper method
+	JMenuItem caseMagicItem = getMenuItem("Case Magic", -1, "");
+	caseMagicItem.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			// Get the current text selection
+			final String selected = txt.getSelectedText();
+
+			// Validate selection: must not be null or empty
+			if (selected == null || selected.trim().isEmpty()) {
+				JOptionPane.showMessageDialog(mb, 
+					"<html><b style='color:red;'>Warning:</b> Please select some text first!</html>", 
+					"No Selection", 
+					JOptionPane.WARNING_MESSAGE);
+				myfocus();
+				return;
+			}
+
+			// Define fonts and colors from the text pane for UI consistency
+			Font uiFont = txt.getFont();
+			Color uiColor = txt.getForeground();
+
+			// Initialize Radio Buttons with consistent styling
+			JRadioButton camelBtn = new JRadioButton("camelCase");
+			JRadioButton snakeBtn = new JRadioButton("snake_case");
+			JRadioButton upperBtn = new JRadioButton("UPPER CASE");
+			JRadioButton lowerBtn = new JRadioButton("lower case");
+			JRadioButton firstUpperBtn = new JRadioButton("First Letters Upper"); // New
+			JRadioButton firstLowerBtn = new JRadioButton("First Letters Lower"); // New
+			JRadioButton reverseBtn = new JRadioButton("Reverse Text");           // New
+			JRadioButton desireBtn = new JRadioButton("Custom Replacement");
+
+			JRadioButton[] buttons = {
+				camelBtn, snakeBtn, upperBtn, lowerBtn, 
+				firstUpperBtn, firstLowerBtn, reverseBtn, desireBtn
+			};
+			ButtonGroup group = new ButtonGroup();
+
+			// Apply styles and group buttons
+			for (int i = 0; i < buttons.length; i++) {
+				buttons[i].setFont(uiFont);
+				buttons[i].setForeground(uiColor);
+				group.add(buttons[i]);
+			}
+			upperBtn.setSelected(true); // Default action
+
+			// Construct the message panel with HTML title for better readability
+			Object[] params = {
+				"<html><div style='margin-bottom:5px;'><b style='font-size:14px; color:#2980b9;'>Transformation Magic</b><br>" 
+				+ "<b style='font-size:14px; color:#0000ff;'>Choose your target format:</b></div></html>",
+				camelBtn, snakeBtn, upperBtn, lowerBtn, 
+				firstUpperBtn, firstLowerBtn, reverseBtn, desireBtn
+			};
+
+			// Show the dialog
+			int res = JOptionPane.showConfirmDialog(mb, params, "Case Magic", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+			if (res == JOptionPane.OK_OPTION) {
+				String result = selected;
+				int len = selected.length();
+
+				if (upperBtn.isSelected()) {
+					result = selected.toUpperCase();
+				} else if (lowerBtn.isSelected()) {
+					result = selected.toLowerCase();
+				} else if (firstUpperBtn.isSelected()) {
+					// Logic: Capitalize first letter of each word. Limit: 25,000 chars
+					if (len > 25000) {
+						statusLabel.setText("WARNING: Selection too long for Capitalization (Max 25k)!");
+						return;
+					}
+					char[] chars = selected.toLowerCase().toCharArray();
+					boolean found = false;
+					for (int i = 0; i < chars.length; i++) {
+						if (!found && Character.isLetter(chars[i])) {
+							chars[i] = Character.toUpperCase(chars[i]);
+							found = true;
+						} else if (Character.isWhitespace(chars[i])) {
+							found = false;
+						}
+					}
+					result = new String(chars);
+				} else if (firstLowerBtn.isSelected()) {
+					// Logic: Lowercase first letter of each word. Limit: 25,000 chars
+					if (len > 25000) {
+						statusLabel.setText("WARNING: Selection too long for First Letter Lower (Max 25k)!");
+						return;
+					}
+					char[] chars = selected.toUpperCase().toCharArray();
+					boolean found = false;
+					for (int i = 0; i < chars.length; i++) {
+						if (!found && Character.isLetter(chars[i])) {
+							chars[i] = Character.toLowerCase(chars[i]);
+							found = true;
+						} else if (Character.isWhitespace(chars[i])) {
+							found = false;
+						}
+					}
+					result = new String(chars);
+				} else if (reverseBtn.isSelected()) {
+					// Logic: Reverse the entire string. Limit: 100,000 chars
+					if (len > 100000) {
+						statusLabel.setText("WARNING: Selection too long for Reverse (Max 100k)!");
+						return;
+					}
+					result = new StringBuilder(selected).reverse().toString();
+				} else if (snakeBtn.isSelected()) {
+					result = selected.trim().toLowerCase().replaceAll("[\\s-]+", "_");
+				} else if (camelBtn.isSelected()) {
+					String[] words = selected.trim().split("[\\s_-]+");
+					StringBuilder sb = new StringBuilder();
+					for (int i = 0; i < words.length; i++) {
+						String word = words[i].toLowerCase();
+						if (i > 0 && word.length() > 0) {
+							word = Character.toUpperCase(word.charAt(0)) + word.substring(1);
+						}
+						sb.append(word);
+					}
+					result = sb.toString();
+				} else if (desireBtn.isSelected()) {
+					String toReplace = JOptionPane.showInputDialog(mb, 
+						"<html><body style='width:200px;'><font color='blue'><b>Enter custom text:</b></font></body></html>");
+					if (toReplace != null) {
+						result = toReplace; 
+					}
+				}
+
+				// Apply the transformation to the document
+				txt.replaceSelection(result);
+				statusLabel.setText("Transformation applied successfully.");
+			}
+
+			// Always return focus to the editor
+			myfocus();
+		}
+	});
+	m2b.add(caseMagicItem);
+
     m2b.addSeparator ();
     
     JMenuItem selStartItem = getMenuItem ("Start Selection With", -1, "");
-    selStartItem.addActionListener (new ActionListener ()
-      {
-        public void actionPerformed (ActionEvent evt)
-        {
-          statusLabel.setText("");
-          String selected=txt.getSelectedText ();
-          
-          if (selected==null)
-          {
-            statusLabel.setText ("There is Not Selected Text!");
-            return;
-          }
-          
-          if (selected.length () < 1)
-          {
-            statusLabel.setText ("There is Not Selected Text!");
-            return;
-          }
-          
-          String input=JOptionPane.showInputDialog(mb, "<html><body><font color=\"#0000EE\" size=\"4\">Enter char or word for append<p>to </font><font color=\"#EE0000\" size=\"5\">start</font><font color=\"#0000EE\" size=\"5\"> of each selected line:</font></body></html>");
-          
-          if (input==null)
-          {
-            statusLabel.setText ("There is Not Input Text!");
-            return;
-          }
-          
-          if (input.length () < 1)
-          {
-            statusLabel.setText ("There is Not Sufficient Input Text!");
-            return;
-          }
-          
-          StringBuffer sb=new StringBuffer ();
-          
-          boolean errored=false;
-          
-          try
-          {
-            Reader sr=new StringReader (selected);
-            BufferedReader br=new BufferedReader (sr);
-            
-            String line=null;
-            String xline="";
-            
-            while ( (line=br.readLine ()) != null)
-            {
-              xline=line.trim ();
-              
-              if (xline.length () < 1)
-              {
-                sb.append ("\n");
-                continue;
-              }
-              
-              sb.append (input);
-              sb.append (line);
-              sb.append ("\n");
-            }
-            
-            br.close ();
-            sr.close ();
-          }
-          catch (IOException ioe)
-          {
-            ioe.printStackTrace ();
-            errored=true;
-          }
-          
-          if (!errored)
-          {
-            String content=sb.toString ();
-            txt.replaceSelection (content);
-          }
-          else
-          {
-            statusLabel.setText ("An error ocurred in startSelReplace!");
-          }
-          
-          return;
-        }
-      }
-    );
+	selStartItem.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent evt) {
+			statusLabel.setText("");
+			String selected = txt.getSelectedText();
+
+			if (selected == null || selected.isEmpty()) {
+				statusLabel.setText("There is No Selected Text!");
+				return;
+			}
+
+			String input = JOptionPane.showInputDialog(mb, "...");
+			
+			if (input == null || input.isEmpty()) {
+				statusLabel.setText("Input cancelled or empty.");
+				myfocus();
+				return;
+			}
+
+			input = replaceEscapeSequences(input);
+			StringBuilder sb = new StringBuilder(); // Mpre fast
+
+			try (BufferedReader br = new BufferedReader(new StringReader(selected))) {
+				String line;
+				while ((line = br.readLine()) != null) {
+					if (line.trim().isEmpty()) {
+						sb.append("\n");
+					} else {
+						sb.append(input).append(line).append("\n");
+					}
+				}
+				
+				if (sb.length() > 0) sb.setLength(sb.length() - 1);
+				
+				txt.replaceSelection(sb.toString());
+				myfocus();
+			} catch (IOException ioe) {
+				statusLabel.setText("Error occurred!");
+			}
+
+			myfocus();
+		}
+	});
     m2b.add (selStartItem);
     
-    JMenuItem selEndItem = getMenuItem ("End Selection With", -1, "");
-    selEndItem.addActionListener (new ActionListener ()
-      {
-        public void actionPerformed (ActionEvent evt)
-        {
-          statusLabel.setText("");
-          String selected=txt.getSelectedText ();
-          
-          if (selected==null)
-          {
-            statusLabel.setText ("There is Not Selected Text!");
-            return;
-          }
-          
-          if (selected.length () < 1)
-          {
-            statusLabel.setText ("There is Not Selected Text!");
-            return;
-          }
-          
-          String input=JOptionPane.showInputDialog(mb, "<html><body><font color=\"#0000EE\" size=\"5\">Enter char or word for append<p>to </font><font color=\"#EE0000\" size=\"5\">end</font><font color=\"#0000EE\" size=\"4\"> of each selected line:</font></body></html>");
-          
-          if (input==null)
-          {
-            statusLabel.setText ("There is Not Input Text!");
-            return;
-          }
-          
-          if (input.length () < 1)
-          {
-            statusLabel.setText ("There is Not Sufficient Input Text!");
-            return;
-          }
-          
-          StringBuffer sb=new StringBuffer ();
-          
-          boolean errored=false;
-          
-          try
-          {
-            Reader sr=new StringReader (selected);
-            BufferedReader br=new BufferedReader (sr);
-            
-            String line=null;
-            String xline="";
-            
-            while ( (line=br.readLine ()) != null)
-            {
-              xline=line.trim ();
-              
-              if (xline.length () < 1)
-              {
-                sb.append ("\n");
-                continue;
-              }
-              
-              sb.append (line);
-              sb.append (input);
-              sb.append ("\n");
-            }
-            
-            br.close ();
-            sr.close ();
-          }
-          catch (IOException ioe)
-          {
-            ioe.printStackTrace ();
-            errored=true;
-          }
-          
-          if (!errored)
-          {
-            String content=sb.toString ();
-            txt.replaceSelection (content);
-          }
-          else
-          {
-            statusLabel.setText ("An error ocurred in startSelReplace!");
-          }
-          
-          return;
-        }
-      }
-    );
-    m2b.add (selEndItem);
-    
-    m2b.addSeparator ();
-    
-    JMenuItem selToPrefItem = getMenuItem ("Selection to YourDesire", KeyEvent.VK_D, "CTRL-D");
-    selToPrefItem.addActionListener (new ActionListener ()
-      {
-        public void actionPerformed (ActionEvent evt)
-        {
-          statusLabel.setText("");
-          String selected=txt.getSelectedText ();
-          
-          if (selected==null)
-          {
-            statusLabel.setText ("There is Not Selected Text!");
-            return;
-          }
-          
-          if (selected.length () < 1)
-          {
-            statusLabel.setText ("There is Not Selected Text!");
-            return;
-          }
-          
-          String content=JOptionPane.showInputDialog(mb, "<html><body><font color=\"blue\" size=\"5\"> Text For Replace: </font></body></html>");
-          
-          if (content==null)
-          {
-            statusLabel.setText ("There is Not Content!");
-            return;
-          }
-          
-          txt.replaceSelection (content);
-          
-          return;
-        }
-      }
-    );
-    m2b.add (selToPrefItem);
+	JMenuItem selEndItem = getMenuItem("End Selection With", -1, "");
+	selEndItem.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent evt) {
+			statusLabel.setText("");
+			String selected = txt.getSelectedText();
+
+			// 1. Validation for selection
+			if (selected == null || selected.isEmpty()) {
+				statusLabel.setText("There is No Selected Text!");
+				return;
+			}
+
+			// 2. UI Input
+			String prompt = "<html><body><font color=\"#0000EE\" size=\"5\">Enter char or word (incluse \\t \\n \\r) for append<p>to </font><font color=\"#EE0000\" size=\"5\">end</font><font color=\"#0000EE\" size=\"4\"> of each selected line:</font></body></html>";
+			String input = JOptionPane.showInputDialog(mb, prompt);
+
+			if (input == null || input.isEmpty()) {
+				statusLabel.setText("Input cancelled or empty.");
+				myfocus();
+				return;
+			}
+
+			// 3. Process input and text
+			input = replaceEscapeSequences(input);
+			StringBuilder sb = new StringBuilder(); // More efficient than StringBuffer
+
+			// 4. Line processing with Auto-Closeable resources
+			try (BufferedReader br = new BufferedReader(new StringReader(selected))) {
+				String line;
+				while ((line = br.readLine()) != null) {
+					// If line is empty or just whitespace
+					if (line.trim().isEmpty()) {
+						sb.append("\n");
+						continue;
+					}
+					
+					// Append input at the end of the line
+					sb.append(line).append(input).append("\n");
+				}
+
+				// Remove the last extra newline if added
+				if (sb.length() > 0 && sb.charAt(sb.length() - 1) == '\n') {
+					sb.setLength(sb.length() - 1);
+				}
+
+				txt.replaceSelection(sb.toString());
+				txt.requestFocus ();
+				statusLabel.setText("Appended to end of lines successfully.");
+
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				statusLabel.setText("An error occurred during processing!");
+			}
+
+			// 5. Final Focus Management (Non-lambda version)
+			myfocus();
+		}
+	});
+	m2b.add(selEndItem);
     
     m2b.addSeparator ();
     
@@ -3346,13 +3177,14 @@ implements ActionListener
 
 			if (content == null) {
 				statusLabel.setText("Find word input cancelled!");
+				myfocus();
 				return;
 			}
 
 			if (content.length() < 1) {
 				statusLabel.setText("Find word is empty!");
 				CONFIND = "";
-				txt.requestFocus();
+				myfocus();
 				return;
 			}
 
@@ -3368,7 +3200,7 @@ implements ActionListener
 					processedWord = content;
 					statusLabel.setText("Unicode parse error! Using raw text.");
 				}
-			} 
+			}
 			// 2. Check for ASCII format (97;98;99)
 			else {
 				boolean isAsciiFormat = true;
@@ -3401,7 +3233,7 @@ implements ActionListener
 
 			CONFIND = processedWord;
 			statusLabel.setText("Current find word/regex: [" + CONFIND + "]");
-			txt.requestFocus();
+			myfocus();
 		}
 	});
 	m2b.add(xfindItem);
@@ -3462,111 +3294,136 @@ implements ActionListener
           txt.select (strt, endd);
           metin=txt.getText ();
           
-          //txt.requestFocus ();
-          
           return;
         }
       }
     );
     m2b.add (findItem);
     
-    JMenuItem regexFindItem = getMenuItem("Regex Find", KeyEvent.VK_Y, "CTRL-Y");
-    regexFindItem.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent evt) {
-          final String patternStr = CONFIND;
-          final String text = txt.getText();
-          final int caret = txt.getCaretPosition();
-          
-          // --- 1. PRE-CHECK & SAFETY ---
-          if (patternStr == null || patternStr.isEmpty()) {
-            statusLabel.setText("Error: Pattern is empty.");
-            return;
-          }
-          
-          final String processedPattern = escapeSequencesForRegex(patternStr);
-          String safeLevel = ProductionRegexSafetyCheck.checkForLargeText(processedPattern, (long) text.length());
-          
-          if ("DANGEROUS".equals(safeLevel)) {
-            String confirm = JOptionPane.showInputDialog(mb,
-              "<html><body>" +
-              "<font color='blue' size='5'><b>Regex Warning:</b> Potential freeze detected!</font><br>" +
-              "<font color='gray' size='3'>This pattern might be slow on large text.</font><br><br>" +
-              "<font color='red' size='4'>Do you want to continue? (y/e/t/yes/ok)</font>" +
-            "</body></html>");
-            
-            // Check for null (Cancel button or X)
-            if (confirm == null) return;
-            
-            String input = confirm.trim().toLowerCase();
-            
-            // Accept: y (yes), e (evet), t (true), yes, ok
-            boolean shouldContinue = input.equals("y") ||
-            input.equals("e") ||
-            input.equals("t") ||
-            input.equals("yes") ||
-            input.equals("ok");
-            
-            if (!shouldContinue) {
-              statusLabel.setText("Search aborted by user.");
-              return;
-            }
-          }
-          
-          // --- 2. SWINGWORKER TASK ---
-          SwingWorker<MatchResult, Void> worker = new SwingWorker<net.dilmerkezi.defter.MatchResult, Void>() {
-            
-            @Override
-            protected void process(java.util.List<Void> chunks) {
-              // UI feedback while working
-              statusLabel.setText("Searching... [Press ESC or Click elsewhere to try to stop]");
-            }
-            
-            @Override
-            protected MatchResult doInBackground() throws Exception {
-              // Background thread: Heavy regex processing
-              Pattern pattern = Pattern.compile(processedPattern, Pattern.UNICODE_CHARACTER_CLASS);
-              Matcher matcher = pattern.matcher(text);
-              
-              // Note: matcher.find() is where the CPU spends time
-              if (matcher.find(caret)) {
-                return new MatchResult(matcher.start(), matcher.end(), matcher.group(), true);
-              }
-              return new MatchResult(0, 0, null, false);
-            }
-            
-            @Override
-            protected void done() {
-              // Back on EDT: Update UI
-              try {
-                if (isCancelled()) {
-                  statusLabel.setText("Regex Search Cancelled.");
-                  return;
-                }
-                
-                MatchResult result = get();
-                
-                if (result.found) {
-                  txt.requestFocusInWindow();
-                  txt.setCaretPosition(result.end);
-                  txt.select(result.start, result.end);
-                  statusLabel.setText("Found: \"" + result.matchedText + "\"");
-                  } else {
-                  statusLabel.setText("No matches found.");
-                  JOptionPane.showMessageDialog(mb, "Pattern not found!", "Regex Find", JOptionPane.INFORMATION_MESSAGE);
-                }
-                } catch (Exception e) {
-                statusLabel.setText("Regex Error: " + e.getCause().getMessage());
-              }
-            }
-          };
-          
-          // --- 3. STATUS & EXECUTION ---
-          statusLabel.setText("Searching for: " + patternStr + " (Background task started...)");
-          worker.execute();
-        }
-    });
-    
-    m2b.add(regexFindItem);
+	JMenuItem regexFindItem = getMenuItem("Regex Find", KeyEvent.VK_Y, "CTRL-Y");
+	regexFindItem.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent evt) {
+		  final String patternStr = CONFIND;
+		  final String text = txt.getText();
+		  final int caret = txt.getCaretPosition();
+		  
+		  // --- 1. PRE-CHECK & SAFETY ---
+		  if (patternStr == null || patternStr.isEmpty()) {
+			statusLabel.setText("Error: Pattern is empty.");
+			return;
+		  }
+		  
+		  final String processedPattern = escapeSequencesForRegex(patternStr);
+		  String safeLevel = ProductionRegexSafetyCheck.checkForLargeText(processedPattern, (long) text.length());
+		  
+		  if ("DANGEROUS".equals(safeLevel)) {
+			String confirm = JOptionPane.showInputDialog(mb,
+			  "<html><body>" +
+			  "<font color='blue' size='5'><b>Regex Warning:</b> Potential freeze detected!</font><br>" +
+			  "<font color='gray' size='3'>This pattern might be slow on large text.</font><br><br>" +
+			  "<font color='red' size='4'>Do you want to continue? (y/e/t/yes/ok)</font>" +
+			"</body></html>");
+			
+			if (confirm == null) return;
+			
+			String input = confirm.trim().toLowerCase();
+			
+			// Original logic preserved: y (yes), e (evet), t (true), yes, ok
+			boolean shouldContinue = input.equals("y") ||
+			input.equals("e") ||
+			input.equals("t") ||
+			input.equals("yes") ||
+			input.equals("ok");
+			
+			if (!shouldContinue) {
+			  statusLabel.setText("Search aborted by user.");
+			  return;
+			}
+		  }
+		  
+		  // --- 2. SWINGWORKER TASK ---
+		  // Defined as a final variable so the Cancel Action can access it
+		  final SwingWorker<MatchResult, Void> worker = new SwingWorker<MatchResult, Void>() {
+			
+			@Override
+			protected MatchResult doInBackground() throws Exception {
+			  Pattern pattern = Pattern.compile(processedPattern, Pattern.UNICODE_CHARACTER_CLASS);
+			  
+			  // Using a custom CharSequence to allow interruption inside the regex engine
+			  CharSequence interruptibleText = new CharSequence() {
+				@Override public int length() { return text.length(); }
+				@Override public char charAt(int index) {
+				  // Check if worker was cancelled
+				  if (Thread.currentThread().isInterrupted()) {
+					throw new RuntimeException("UserInterrupted");
+				  }
+				  return text.charAt(index);
+				}
+				@Override public CharSequence subSequence(int start, int end) {
+				  return text.subSequence(start, end);
+				}
+				@Override public String toString() { return text; }
+			  };
+
+			  Matcher matcher = pattern.matcher(interruptibleText);
+			  
+			  try {
+				if (matcher.find(caret)) {
+				  return new MatchResult(matcher.start(), matcher.end(), matcher.group(), true);
+				}
+			  } catch (RuntimeException e) {
+				if ("UserInterrupted".equals(e.getMessage())) return null;
+				throw e;
+			  }
+			  return new MatchResult(0, 0, null, false);
+			}
+			
+			@Override
+			protected void done() {
+			  // Cleanup: Remove the Escape-to-Cancel shortcut once task is finished
+			  txt.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).remove(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0));
+
+			  try {
+				if (isCancelled()) {
+				  statusLabel.setText("Regex Search Cancelled.");
+				  return;
+				}
+				
+				MatchResult result = get();
+				if (result == null) return; // Means interrupted
+				
+				if (result.found) {
+				  txt.setCaretPosition(result.end);
+				  txt.select(result.start, result.end);
+				  statusLabel.setText("Found: \"" + result.matchedText + "\"");
+				} else {
+				  statusLabel.setText("No matches found.");
+				  JOptionPane.showMessageDialog(mb, "Pattern not found!", "Regex Find", JOptionPane.INFORMATION_MESSAGE);
+				}
+				//myfocus();
+			  } catch (Exception e) {
+				statusLabel.setText("Regex Error: " + (e.getCause() != null ? e.getCause().getMessage() : e.getMessage()));
+			  }
+			}
+		  };
+		  
+		  // --- 3. ABORT SHORTCUT (ESC) ---
+		  // Register temporary Escape key action without Lambda
+		  txt.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "cancelSearch");
+		  txt.getActionMap().put("cancelSearch", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			  worker.cancel(true);
+			  statusLabel.setText("Aborting Regex Search...");
+			}
+		  });
+		  
+		  // --- 4. EXECUTION ---
+		  statusLabel.setText("Searching: " + patternStr + " (Press ESC to cancel)");
+		  worker.execute();
+		}
+	});
+	m2b.add(regexFindItem);
     
     m2b.addSeparator ();
     
@@ -3597,12 +3454,14 @@ implements ActionListener
           if (srcreps==null)
           {
             statusLabel.setText ("NOT REPLACED NULL VALUE!");
+            myfocus();
             return;
           }
           
           if (srcreps.length () < 1)
           {
             statusLabel.setText ("NOT REPLACED ZERO LENGTH!");
+            myfocus();
             return;
           }
           
@@ -3612,12 +3471,13 @@ implements ActionListener
             String k=mm.replaceAll (srcreps, dest);
             txt.setText ("");
             txt.setText (k);
-            txt.setCaretPosition (0);
+            myfocus();
             statusLabel.setText ("Replaced Selection to Upper Case Successfully!");
           }
           catch (Exception e)
           {
             statusLabel.setText ("WARNING: NOT REPLACED TO UPPER CASE!");
+            myfocus();
             return;
           }
           
@@ -3653,12 +3513,14 @@ implements ActionListener
           if (srcreps==null)
           {
             statusLabel.setText ("NOT REPLACED NULL VALUE!");
+            myfocus();
             return;
           }
           
           if (srcreps.length () < 1)
           {
             statusLabel.setText ("NOT REPLACED ZERO LENGTH!");
+            myfocus();
             return;
           }
           
@@ -3668,12 +3530,13 @@ implements ActionListener
             String k=mm.replaceAll (srcreps, dest);
             txt.setText ("");
             txt.setText (k);
-            txt.setCaretPosition (0);
+            myfocus();
             statusLabel.setText ("Replaced Selection to Lower Case Successfully!");
           }
           catch (Exception e)
           {
             statusLabel.setText ("WARNING: NOT REPLACED TO LOWER CASE!");
+            myfocus();
             return;
           }
           
@@ -3745,22 +3608,17 @@ implements ActionListener
             String processedText = processBlocksSeparately(currentText);
             
             int pos = txt.getCaretPosition();
-            int klen = processedText.length();
             
             txt.setText(processedText);
             
-            if (pos >= 0x0000 && pos < klen) {
-              txt.setCaretPosition(pos);
-              } else {
-              txt.setCaretPosition(0x0000);
-            }
+            myfocus();
             
             statusLabel.setText("Numbered footnotes applied successfully.");
             } catch (Exception e) {
             statusLabel.setText("Error applying numbered footnotes: " + e.getMessage());
           }
           
-          txt.requestFocus();
+          myfocus();
         }
     });
     m2b.add(easyRead1);
@@ -3782,7 +3640,7 @@ implements ActionListener
           result = result.replaceAll("\n ", "\n");
           
           txt.setText(result);
-          txt.setCaretPosition (0x0000);
+          myfocus();
           
           statusLabel.setText ("Corrected False Footnotes.");
         }
@@ -3871,7 +3729,7 @@ implements ActionListener
           
           txt.setText (text);
           
-          txt.setCaretPosition (0x0000);
+          myfocus();
           
           statusLabel.setText ("The Text has Converted to Latin Form Successfully.");
           
@@ -3896,6 +3754,7 @@ implements ActionListener
 					"<html><b style='color:red; font-size:18pt;'>Selection Required:</b><br>Please select at least one character to convert...</html>", 
 					"Conversion Warning", 
 					JOptionPane.WARNING_MESSAGE);
+				myfocus();
 				return;
 			}
 
@@ -3916,6 +3775,7 @@ implements ActionListener
 			if (res != null) {
 				// replaceSelection is the most efficient way to swap the selected block
 				txt.replaceSelection(res);
+				myfocus();
 				statusLabel.setText("Selected text converted to Unicode successfully.");
 			}
 		}
@@ -3939,6 +3799,7 @@ implements ActionListener
 					"<html><b style='color:red; font-size:18pt;'>Selection Required:</b><br>Please select the Unicode text you wish to decode...</html>", 
 					"Conversion Warning", 
 					JOptionPane.WARNING_MESSAGE);
+				myfocus();
 				return;
 			}
 
@@ -3958,6 +3819,7 @@ implements ActionListener
 			// 4. Replace the selected block with the decoded text
 			if (res != null) {
 				txt.replaceSelection(res);
+				myfocus();
 				statusLabel.setText("Selected Unicode form converted back to text successfully.");
 			}
 		}
@@ -4126,7 +3988,7 @@ implements ActionListener
             
             // Directly insert the text at the caret position
             txt.replaceSelection(selectedTime);
-            
+            myfocus();
             // Log to status label
             statusLabel.setText(" Inserted: " + selectedTime);
           }
@@ -4146,6 +4008,7 @@ implements ActionListener
             try {
               String encoded = Base64.getEncoder().encodeToString(seciliMetin.getBytes("UTF-8"));
               txt.replaceSelection(encoded);
+              myfocus();
               } catch (Exception ex) {
               JOptionPane.showMessageDialog(mb, "UTF-8 Not Supported Error!");
             }
@@ -4168,6 +4031,7 @@ implements ActionListener
               byte[] decodedBytes = Base64.getDecoder().decode(seciliMetin.trim());
               String decoded = new String(decodedBytes, "UTF-8");
               txt.replaceSelection(decoded);
+              myfocus();
               } catch (IllegalArgumentException ex) {
               JOptionPane.showMessageDialog(mb, "Error: Selected Text is not valid Base64.");
               } catch (Exception ex) {
@@ -4365,7 +4229,7 @@ implements ActionListener
                 
                 // 4. Move the caret and request focus
                 txt.setCaretPosition(pos);
-                txt.requestFocusInWindow();
+                myfocus();
                 } else {
                 JOptionPane.showMessageDialog(mb, "Line number out of range!", "Error", JOptionPane.ERROR_MESSAGE);
               }
@@ -4649,8 +4513,208 @@ implements ActionListener
           fselectedMenu.add (ix);
         }
         
-        mb.add (fselectedMenu);
+        mb.add(fselectedMenu);
         ////////////////SELECTED 2 END
+        
+		////// START - PAINT MENU //////
+		JMenu paintMenu = getMenu("Paint");
+		
+		JMenuItem txtInfoItem = getMenuItem("Text Pane Information", -1, "");
+		txtInfoItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				statusLabel.setText("");
+
+				// Convert Colors to Hex format
+				String fg = String.format("#%06X", (txt.getForeground().getRGB() & 0xFFFFFF));
+				String bg = String.format("#%06X", (txt.getBackground().getRGB() & 0xFFFFFF));
+				String sel = String.format("#%06X", (txt.getSelectionColor().getRGB() & 0xFFFFFF));
+				String caret = String.format("#%06X", (txt.getCaretColor().getRGB() & 0xFFFFFF));
+				//String selText = String.format("#%06X", (txt.getSelectedTextColor().getRGB() & 0xFFFFFF));
+
+				// Determine Font Style
+				String style = "Plain";
+				if (txt.getFont().isBold() && txt.getFont().isItalic()) style = "Bold Italic";
+				else if (txt.getFont().isBold()) style = "Bold";
+				else if (txt.getFont().isItalic()) style = "Italic";
+
+				// Get Margin Information
+				java.awt.Insets m = txt.getMargin();
+				String marginInfo = "T:" + m.top + " L:" + m.left + " B:" + m.bottom + " R:" + m.right;
+
+				// Create HTML with 2x larger fonts and specific colors
+				// Key: Red (#FF0000), Value: Blue (#0000FF)
+				String msg = "<html><body style='width: 450px; font-family: sans-serif; font-size: 20pt; padding: 15px;'>"
+						+ "<h1 style='color: #2C3E50; border-bottom: 3px solid #3498DB; font-size: 24pt;'>Component Info</h1>"
+						+ "<table border='0' cellpadding='8' style='font-size: 18pt;'>"
+						+ "<tr><td style='color: red;'><b>Font Family:</b></td><td style='color: blue;'>" + txt.getFont().getFamily() + "</td></tr>"
+						+ "<tr><td style='color: red;'><b>Font Size:</b></td><td style='color: blue;'>" + txt.getFont().getSize() + " pt</td></tr>"
+						+ "<tr><td style='color: red;'><b>Font Style:</b></td><td style='color: blue;'>" + style + "</td></tr>"
+						+ "<tr><td style='color: red;'><b>Foreground:</b></td><td style='color: blue;'>" + fg + "</td></tr>"
+						+ "<tr><td style='color: red;'><b>Background:</b></td><td style='color: blue;'>" + bg + "</td></tr>"
+						+ "<tr><td style='color: red;'><b>Selection Text:</b></td><td style='color: blue;'>" + sel + "</td></tr>"
+						+ "<tr><td style='color: red;'><b>Caret Color:</b></td><td style='color: blue;'>" + caret + "</td></tr>"
+						+ "<tr><td style='color: red;'><b>Margins:</b></td><td style='color: blue;'>" + marginInfo + "</td></tr>"
+						+ "<tr><td colspan='2'><hr style='border: 0; border-top: 2px solid #CCC;'></td></tr>"
+						+ "<tr><td style='color: red;'><b>Doc Length:</b></td><td style='color: blue;'>" + txt.getDocument().getLength() + "</td></tr>"
+						+ "<tr><td style='color: red;'><b>Editable:</b></td><td style='color: blue;'>" + (txt.isEditable() ? "Yes" : "No") + "</td></tr>"
+						+ "</table></body></html>";
+
+				JOptionPane.showMessageDialog(null, msg, "Detailed Statistics", JOptionPane.INFORMATION_MESSAGE);
+			}
+		});
+		paintMenu.add(txtInfoItem);
+        
+		paintMenu.addSeparator();
+		
+		// 1. Toggle Gradient Background
+		final JCheckBoxMenuItem itemEnableGradient = new JCheckBoxMenuItem("Enable Gradient Background");
+		itemEnableGradient.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+        itemEnableGradient.setForeground(Color.BLACK);
+		itemEnableGradient.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// Toggle the gradient state in MTextPane
+				txt.setGradientEnabled(itemEnableGradient.isSelected());
+			}
+		});
+		paintMenu.add(itemEnableGradient);
+
+		// 2. Set Gradient Colors
+		JMenuItem itemSetGradientColors = getMenuItem("Set Gradient Colors...", -1, "");
+		itemSetGradientColors.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// Pick start and end colors using JColorChooser
+				Color c1 = JColorChooser.showDialog(mb, "Select Start Color", Color.WHITE);
+				if (c1 != null) {
+					Color c2 = JColorChooser.showDialog(mb, "Select End Color", Color.GRAY);
+					if (c2 != null) {
+						txt.setGradientColors(c1, c2);
+					}
+				}
+			}
+		});
+		paintMenu.add(itemSetGradientColors);
+
+		// 3. Set Gradient Coordinates (X1, Y1, X2, Y2)
+		JMenuItem itemSetCoords = getMenuItem("Set Gradient Coordinates...", -1, "");
+		itemSetCoords.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// Input dialog with blue text size 5
+				String msg = "<html><font color='blue' size='5'>Enter coords (x1,y1,x2,y2):</font></html>";
+				String input = JOptionPane.showInputDialog(mb, msg, "0,0,0,500");
+				
+				if (input != null && input.contains(",")) {
+					try {
+						String[] parts = input.split(",");
+						int x1 = Integer.parseInt(parts[0].trim());
+						int y1 = Integer.parseInt(parts[1].trim());
+						int x2 = Integer.parseInt(parts[2].trim());
+						int y2 = Integer.parseInt(parts[3].trim());
+						txt.setGradientCoords(x1, y1, x2, y2);
+					} catch (Exception ex) {
+						String errMsg = "<html><font color='red' size='5'>Invalid format! Use numeric values.</font></html>";
+						JOptionPane.showMessageDialog(mb, errMsg, "Error", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			}
+		});
+		paintMenu.add(itemSetCoords);
+
+		paintMenu.addSeparator();
+
+		// 4a. Set BG Transparency (Alpha Composite)
+		JMenuItem itemSetAlpha = getMenuItem("Set BG Transparency Alpha", -1, "");
+		itemSetAlpha.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// Input dialog with blue text size 5
+				String msg = "<html><font color='blue' size='5'>Enter BG Alpha value (0.01 - 1.0):</font></html>";
+				String input = JOptionPane.showInputDialog(mb, msg, "1.0f");
+				
+				if (input != null) {
+					try {
+						float alpha = Float.parseFloat(input);
+						txt.setAlphaValue(alpha);
+					} catch (Exception ex) {
+						String errMsg = "<html><font color='red' size='5'>Invalid alpha value!</font></html>";
+						JOptionPane.showMessageDialog(mb, errMsg, "Error", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			}
+		});
+		paintMenu.add(itemSetAlpha);
+		
+        // 4b. Set Text Transparency (Alpha Composite)
+		JMenuItem itemTextSetAlpha = getMenuItem("Set Text Transparency Alpha", -1, "");
+		itemTextSetAlpha.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// Input dialog with blue text size 5
+				String msg = "<html><font color='blue' size='5'>Enter Text Alpha value (0.01 - 1.0):</font></html>";
+				String input = JOptionPane.showInputDialog(mb, msg, "1.0f");
+				
+				if (input != null) {
+					try {
+						float alpha = Float.parseFloat(input);
+						txt.setTextAlphaValue(alpha);
+					} catch (Exception ex) {
+						String errMsg = "<html><font color='red' size='5'>Invalid alpha value!</font></html>";
+						JOptionPane.showMessageDialog(mb, errMsg, "Error", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			}
+		});
+		paintMenu.add(itemTextSetAlpha);
+		
+		// 5. Background Image & Texture Mapping (Using existing iconjfc)
+		JMenuItem itemSetBgImage = getMenuItem("Set Background Image Texture", -1, "");
+		itemSetBgImage.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// Open dialog using existing JFileChooser
+				int result = iconjfc.showOpenDialog(mb);
+				
+				if (result == JFileChooser.APPROVE_OPTION) {
+					try {
+						File file = iconjfc.getSelectedFile();
+						BufferedImage img = javax.imageio.ImageIO.read(file);
+						
+						// Prompt for dimensions with blue text size 5
+						String msg = "<html><font color='blue' size='5'>Enter Texture Width,|x|*Height:</font></html>";
+						String sizeInput = JOptionPane.showInputDialog(mb, msg, img.getWidth() + "*" + img.getHeight());
+						sizeInput = sizeInput.replace("x", ",");
+						sizeInput = sizeInput.replace("*", ",");
+						
+						int w = 0, h = 0;
+						if (sizeInput != null && sizeInput.contains(",")) {
+							String[] s = sizeInput.split(",");
+							w = Integer.parseInt(s[0].trim());
+							h = Integer.parseInt(s[1].trim());
+						}
+						
+						txt.setBackgroundImage(img, w, h);
+					} catch (Exception ex) {
+						String errMsg = "<html><font color='red' size='5'>Error loading image!</font></html>";
+						JOptionPane.showMessageDialog(mb, errMsg, "Error", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			}
+		});
+		paintMenu.add(itemSetBgImage);
+
+		// 6. Reset All Paint Settings
+		JMenuItem itemResetBg = getMenuItem("Reset Background", -1, "");
+		itemResetBg.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				txt.setGradientEnabled(false);
+				txt.setBackgroundImage(null, 0, 0);
+				txt.setAlphaValue(1.0f);
+				itemEnableGradient.setSelected(false);
+				
+				String msg = "<html><font color='blue' size='5'>Background has been reset.</font></html>";
+				JOptionPane.showMessageDialog(mb, msg, "Reset", JOptionPane.INFORMATION_MESSAGE);
+			}
+		});
+		paintMenu.add(itemResetBg);
+
+		mb.add(paintMenu);
+		///// END - PAINT MENU //////
         
         ///////////////
         JMenu countMenu=getMenu ("Count");
@@ -4716,54 +4780,7 @@ implements ActionListener
         countMenu.add (selcountItem);
         
         countMenu.addSeparator();
-        
-		JMenuItem txtInfoItem = getMenuItem("Text Pane Information", -1, "");
-		txtInfoItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				statusLabel.setText("");
-
-				// Convert Colors to Hex format
-				String fg = String.format("#%06X", (txt.getForeground().getRGB() & 0xFFFFFF));
-				String bg = String.format("#%06X", (txt.getBackground().getRGB() & 0xFFFFFF));
-				String sel = String.format("#%06X", (txt.getSelectionColor().getRGB() & 0xFFFFFF));
-				String caret = String.format("#%06X", (txt.getCaretColor().getRGB() & 0xFFFFFF));
-				//String selText = String.format("#%06X", (txt.getSelectedTextColor().getRGB() & 0xFFFFFF));
-
-				// Determine Font Style
-				String style = "Plain";
-				if (txt.getFont().isBold() && txt.getFont().isItalic()) style = "Bold Italic";
-				else if (txt.getFont().isBold()) style = "Bold";
-				else if (txt.getFont().isItalic()) style = "Italic";
-
-				// Get Margin Information
-				java.awt.Insets m = txt.getMargin();
-				String marginInfo = "T:" + m.top + " L:" + m.left + " B:" + m.bottom + " R:" + m.right;
-
-				// Create HTML with 2x larger fonts and specific colors
-				// Key: Red (#FF0000), Value: Blue (#0000FF)
-				String msg = "<html><body style='width: 450px; font-family: sans-serif; font-size: 20pt; padding: 15px;'>"
-						+ "<h1 style='color: #2C3E50; border-bottom: 3px solid #3498DB; font-size: 24pt;'>Component Info</h1>"
-						+ "<table border='0' cellpadding='8' style='font-size: 18pt;'>"
-						+ "<tr><td style='color: red;'><b>Font Family:</b></td><td style='color: blue;'>" + txt.getFont().getFamily() + "</td></tr>"
-						+ "<tr><td style='color: red;'><b>Font Size:</b></td><td style='color: blue;'>" + txt.getFont().getSize() + " pt</td></tr>"
-						+ "<tr><td style='color: red;'><b>Font Style:</b></td><td style='color: blue;'>" + style + "</td></tr>"
-						+ "<tr><td style='color: red;'><b>Foreground:</b></td><td style='color: blue;'>" + fg + "</td></tr>"
-						+ "<tr><td style='color: red;'><b>Background:</b></td><td style='color: blue;'>" + bg + "</td></tr>"
-						+ "<tr><td style='color: red;'><b>Selection Text:</b></td><td style='color: blue;'>" + sel + "</td></tr>"
-						+ "<tr><td style='color: red;'><b>Caret Color:</b></td><td style='color: blue;'>" + caret + "</td></tr>"
-						+ "<tr><td style='color: red;'><b>Margins:</b></td><td style='color: blue;'>" + marginInfo + "</td></tr>"
-						+ "<tr><td colspan='2'><hr style='border: 0; border-top: 2px solid #CCC;'></td></tr>"
-						+ "<tr><td style='color: red;'><b>Doc Length:</b></td><td style='color: blue;'>" + txt.getDocument().getLength() + "</td></tr>"
-						+ "<tr><td style='color: red;'><b>Editable:</b></td><td style='color: blue;'>" + (txt.isEditable() ? "Yes" : "No") + "</td></tr>"
-						+ "</table></body></html>";
-
-				JOptionPane.showMessageDialog(null, msg, "Detailed Statistics", JOptionPane.INFORMATION_MESSAGE);
-			}
-		});
-		countMenu.add(txtInfoItem);
-        
-        countMenu.addSeparator();
-        
+     
         JMenuItem otherCountItem = getMenuItem ("Other Text Information", -1, "");
         otherCountItem.addActionListener (new ActionListener ()
           {
@@ -4949,7 +4966,7 @@ implements ActionListener
               txt.setCaretPosition (0);
               statusLabel.setText ("Reset Text Operation is Okey!");
               
-              txt.requestFocus ();
+              myfocus();
             }
         });
         m2.add(resetText);
@@ -4984,12 +5001,35 @@ implements ActionListener
         add (scrollPane, "Center");
         
         JPanel labelPanel = new JPanel(new BorderLayout());
-        labelPanel.setPreferredSize(new Dimension(1040, 40));
+        labelPanel.setPreferredSize(new Dimension(1070, 40));
         labelPanel.add(statusLabel, "Center");
         add (labelPanel, "South");
       }//end of constructor
       //##############
       
+      private final void myfocus() {
+		int pos=txt.getCaretPosition ();
+                    
+        if (pos >= 0x0000 && pos<(txt.getText().length())) {
+            txt.setCaretPosition (pos);
+        }
+        else {
+            txt.setCaretPosition (0x0000);
+        }
+		txt.revalidate();
+		txt.repaint();
+		txt.requestFocus();
+		
+		return;  
+	  }
+	  
+      private String replaceEscapeSequences(String input) {
+          if (input == null) return null;
+          return input.replace("\\t", "\t")
+                .replace("\\n", "\n")
+                .replace("\\r", "\r");
+      }
+   
       public void processXOR(boolean isSelected) {
         String content = isSelected ? txt.getSelectedText() : txt.getText();
         if (content == null || content.isEmpty()) return;
@@ -5005,8 +5045,12 @@ implements ActionListener
         }
         
         // Replace the text in JTextPane
-        if (isSelected) txt.replaceSelection(output.toString());
-        else txt.setText(output.toString());
+        if (isSelected) {
+			txt.replaceSelection(output.toString());
+		} else {
+			txt.setText(output.toString());
+        }
+        myfocus();
       }
       
       /**
@@ -5143,6 +5187,7 @@ implements ActionListener
         
         String metin = sb.toString();
         txt.replaceSelection(metin);
+        myfocus();
         
         return;
       }
@@ -5987,6 +6032,7 @@ implements ActionListener
 				// 4. Efficiently replace only the highlighted part with the decoded result
 				if (mm != null) {
 					txt.replaceSelection(mm);
+					myfocus();
 					statusLabel.setText("Decoding completed successfully.");
 				}
 				
@@ -6072,6 +6118,7 @@ implements ActionListener
 				if (mm != null) {
 					// Using replaceSelection instead of wiping the entire pane
 					txt.replaceSelection(mm);
+					myfocus();
 					statusLabel.setText("The selected text has been encoded successfully.");
 				}
 				
@@ -6537,33 +6584,76 @@ implements ActionListener
         return issf;
       }
       
-      private final void setCharCode ()
-      {
-        String mcc=JOptionPane.showInputDialog(mb, "<html><body><font color=\"blue\" size=\"5\"> Char Code Like \"UTF-8\"</font></body></html>");
-        
-        if (mcc == null)
-        {
-          CHARCODE="UTF-8";
-          statusLabel.setText ("Char Code: "+CHARCODE+"");
-          return;
-        }
-        
-        else
-        {
-          if (mcc.length () >= 4)
-          {
-            CHARCODE = mcc;
-            statusLabel.setText ("Char Code: "+CHARCODE+"");
-          }
-          else
-          {
-            CHARCODE="UTF-8";
-            statusLabel.setText ("Char Code: "+CHARCODE+"");
-          }
-        }
-        
-        return;
-      }
+	  /**
+	   * Sets the character encoding for file operations.
+	   * Provides a list of common charsets and a custom input option.
+	   */
+	  private final void setCharCode() {
+			// Styling components
+			Font uiFont = txt.getFont();
+			Color uiColor = txt.getForeground();
+			ButtonGroup group = new ButtonGroup();
+            // 4 columns layout for 25 items: 6 rows of 4 buttons + 1 row for "Custom..."
+            JPanel panel = new JPanel(new GridLayout(0, 4, 10, 5)); 
+
+			JRadioButton[] buttons = new JRadioButton[Help.charsetslen];
+
+			for (int i = 0; i < Help.charsetslen; i++) {
+				buttons[i] = new JRadioButton(Help.charsets[i]);
+				buttons[i].setFont(uiFont);
+				buttons[i].setForeground(uiColor);
+				
+				// Auto-select the current active CHARCODE if it matches
+				if (CHARCODE.equalsIgnoreCase(Help.charsets[i])) {
+					buttons[i].setSelected(true);
+				}
+				
+				group.add(buttons[i]);
+				panel.add(buttons[i]);
+			}
+
+			// Default to UTF-8 if no match found
+			if (group.getSelection() == null) {
+				buttons[0].setSelected(true);
+			}
+
+			Object[] params = {
+				"<html><font color='blue' size='5'>Select Character Encoding:</font></html>",
+				panel
+			};
+
+			int res = JOptionPane.showConfirmDialog(mb, params, "Encoding Settings", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+			if (res == JOptionPane.OK_OPTION) {
+				String selectedSet = "UTF-8"; // Fallback
+
+				for (int i = 0; i < buttons.length; i++) {
+					if (buttons[i].isSelected()) {
+						selectedSet = Help.charsets[i];
+						break;
+					}
+				}
+
+				// Handle Custom encoding input
+				if (selectedSet.equals("Custom...")) {
+					String customMsg = "<html><font color='blue' size='5'>Enter Custom Charset (e.g. windows-1251):</font></html>";
+					String customInput = JOptionPane.showInputDialog(mb, customMsg, "UTF-8");
+					
+					if (customInput != null && customInput.trim().length() >= 2) {
+						CHARCODE = customInput.trim().toUpperCase();
+					} else {
+						CHARCODE = "UTF-8"; // Fallback for invalid/empty custom input
+					}
+				} else {
+					CHARCODE = selectedSet;
+				}
+
+				// Update UI Label
+				statusLabel.setText("Char Code: " + CHARCODE);
+			}
+			
+			myfocus();
+	  }
       
       //////////START OF ObjectOpenListener Inner Class/////////
       private final class ObjectOpenListener implements ActionListener {
@@ -6609,7 +6699,7 @@ implements ActionListener
                     // Crucial: Set Kit BEFORE setting the Document
                     txt.setEditorKit(new StyledEditorKit());
                     txt.setDocument(d);
-                    txt.requestFocus();
+                    myfocus();
                     statusLabel.setText("Object Document Loaded: " + f.getName());
                   }
               });
@@ -6745,7 +6835,7 @@ implements ActionListener
           
           JOptionPane.showMessageDialog(mb, ("<html><body><font color=\"red\" size=\"5\">"+f.getName ()+"<fpnt><font color=\"blue\" size=\"4\">"+" saved successfully!</font></body></html>"));
           
-          txt.requestFocus ();
+          myfocus();
           
           return true;
         }
@@ -7135,7 +7225,7 @@ implements ActionListener
                   public void run() {
                     txt.setText(finalContent);
                     txt.setCaretPosition(0);
-                    txt.requestFocus();
+                    myfocus();
                     statusLabel.setText("Opened " + f.getName() + " successfully!;;; Current Charcode is: " + CHARCODE);
                   }
               });
@@ -7349,7 +7439,7 @@ implements ActionListener
       
       // 5. Frame sizing and positioning
       fr.pack(); // Adjusts size based on components
-      fr.setSize(1040, 620); // Forces specific dimensions
+      fr.setSize(1070, 620); // Forces specific dimensions
       fr.setResizable(true);
       fr.setLocationRelativeTo(null); // Centers the window on screen
       

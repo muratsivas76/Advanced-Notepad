@@ -8,6 +8,24 @@ public class Help {
   public static final String YREGEX = "[\\.\\-:]";
   public static final String UNIREGEX = "\\b(\\p{L}+)(\\d+)\\b";
   
+  public static final String[] charsets = {
+		// Column 1: Standard & Turkish
+		"UTF-8", "ISO-8859-9", "windows-1254", "ISO-8859-1", "US-ASCII", "UTF-16",
+		
+		// Column 2: Western & Central Europe
+		"windows-1252", "ISO-8859-2", "windows-1250", "ISO-8859-15", "UTF-16BE", "UTF-16LE",
+		
+		// Column 3: Cyrillic & Greek & Hebrew
+		"ISO-8859-5", "windows-1251", "ISO-8859-7", "windows-1253", "ISO-8859-8", "windows-1255",
+		
+		// Column 4: Arabic & Asian Styles
+		"ISO-8859-6", "windows-1256", "Big5", "Shift_JIS", "EUC-JP", "EUC-KR",
+		
+		// Final Row (The 25th Element)
+		"Custom..."
+  };
+  public static final int charsetslen = charsets.length;
+  		
   public static final String[] textTypes = {
     ".txt", ".log", ".md",
     ".shtml", ".dhtml", ".xhtml", ".html", ".htm", ".xhtm", ".dhtm", ".shtm",
@@ -25,6 +43,8 @@ public class Help {
     ".jpg", ".jpeg", ".png"
   };
   
+  public static final String IPSUM = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\n\n";
+
   public static final String rtfHint = "\nNote that: If you want to see bg colored words in RTF file \nselect all text and pick bg white first.\n";
   
   public static final String foreignCharsGuide =

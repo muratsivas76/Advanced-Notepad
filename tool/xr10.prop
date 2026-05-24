@@ -1,0 +1,145 @@
+SPACE
+/usr/share/fonts/truetype/msttcorefonts/arial.ttf
+11
+498,708,
+70,70,70,70
+3
+yes:9
+0
+-1
+5
+-1
+-1
+15
+###################
+/usr/share/fonts/ttf/western/arial.ttf
+Murat iNAN, muratsivas76@gmail.com
+###################
+1. satir: Yazi tipi dizinleri, boş geçilebilir
+2.satir: Standard yazi ismi
+3. satir: Normal yazi boyutu
+4. satir: Sayfa boyutu (A4: 595, 842)
+5.satir: Sol, sag, yukari, asagi bosluklar
+6. satir: Ortalama degeri. 8=justified-all
+7. satir: Compression level (Istenmiyorsa no)
+8. satir: Pdf Page Labels Type
+9. satir: Pdf Page Viewer Preference (Istenmiyorsa -1). (256 thumbnail)
+10. satir: Pdf Version (2-7)
+11. satir: Kullanici bilgisi veya -1
+12. satir: Arka plan rengi veya -1
+13. satir: setLeading degeri (yoksa 15f kabul edilir)
+####
+#######
+Ortlama degerleri;
+0: left
+1: center
+2: right
+3: justified
+4: top
+5: middle
+6: bottom
+7: baseline
+8: justified-all
+#######
+Sayfa boyut degerleri
+LETTER = new RectangleReadOnly(612,792);
+NOTE = new RectangleReadOnly(540,720);
+LEGAL = new RectangleReadOnly(612,1008);
+TABLOID = new RectangleReadOnly(792,1224);
+EXECUTIVE = new RectangleReadOnly(522,756);
+POSTCARD = new RectangleReadOnly(283,416);
+A0 = new RectangleReadOnly(2384,3370);
+A1 = new RectangleReadOnly(1684,2384);
+A2 = new RectangleReadOnly(1191,1684);
+A3 = new RectangleReadOnly(842,1191);
+A4 = new RectangleReadOnly(595,842);
+A5 = new RectangleReadOnly(420,595);
+A6 = new RectangleReadOnly(297,420);
+A7 = new RectangleReadOnly(210,297);
+A8 = new RectangleReadOnly(148,210);
+A9 = new RectangleReadOnly(105,148);
+A10 = new RectangleReadOnly(73,105);
+B0 = new RectangleReadOnly(2834,4008);
+B1 = new RectangleReadOnly(2004,2834);
+B2 = new RectangleReadOnly(1417,2004);
+B3 = new RectangleReadOnly(1000,1417);
+B4 = new RectangleReadOnly(708,1000);
+B5 = new RectangleReadOnly(498,708);
+B6 = new RectangleReadOnly(354,498);
+B7 = new RectangleReadOnly(249,354);
+B8 = new RectangleReadOnly(175,249);
+B9 = new RectangleReadOnly(124,175);
+B10 = new RectangleReadOnly(87,124);
+ARCH_E = new RectangleReadOnly(2592,3456);
+ARCH_D = new RectangleReadOnly(1728,2592);
+ARCH_C = new RectangleReadOnly(1296,1728);
+ARCH_B = new RectangleReadOnly(864,1296);
+ARCH_A = new RectangleReadOnly(648,864);
+FLSA = new RectangleReadOnly(612,936);
+FLSE = new RectangleReadOnly(648,936);
+HALFLETTER = new RectangleReadOnly(396,612);
+_11X17 = new RectangleReadOnly(792,1224);
+ID_1 = new RectangleReadOnly(242.65f,153);
+ID_2 = new RectangleReadOnly(297,210);
+ID_3 = new RectangleReadOnly(354,249);
+LEDGER = new RectangleReadOnly(1224,792);
+CROWN_QUARTO = new RectangleReadOnly(535,697);
+LARGE_CROWN_QUARTO = new RectangleReadOnly(569,731);
+DEMY_QUARTO = new RectangleReadOnly(620,782);
+ROYAL_QUARTO = new RectangleReadOnly(671,884);
+CROWN_OCTAVO = new RectangleReadOnly(348,527);
+LARGE_CROWN_OCTAVO = new RectangleReadOnly(365,561);
+DEMY_OCTAVO = new RectangleReadOnly(391,612);
+ROYAL_OCTAVO = new RectangleReadOnly(442,663);
+SMALL_PAPERBACK = new RectangleReadOnly(314,504);
+PENGUIN_SMALL_PAPERBACK = new RectangleReadOnly(314,513);
+PENGUIN_LARGE_PAPERBACK = new RectangleReadOnly(365,561);
+##############
+//public void setAtLeastPdfVersion(char version);
+2-7
+#####################
+/** A viewer preference */
+//public void setViewerPreferences(int preferences);
+PageLayoutSinglePage = 1;
+PageLayoutOneColumn = 2;
+PageLayoutTwoColumnLeft = 4;
+PageLayoutTwoColumnRight = 8;
+PageLayoutTwoPageLeft = 16;
+PageLayoutTwoPageRight = 32;
+PageModeUseNone = 64;
+PageModeUseOutlines = 128;
+PageModeUseThumbs = 256;
+PageModeFullScreen = 512;
+PageModeUseOC = 1024;
+PageModeUseAttachments = 2048;
+HideToolbar = 4096;
+HideMenubar = 8192;
+HideWindowUI = 16384;
+FitWindow = 32768;
+CenterWindow = 65536;
+DisplayDocTitle = 131072;
+NonFullScreenPageModeUseNone = 262144;
+NonFullScreenPageModeUseOutlines = 524288;
+NonFullScreenPageModeUseThumbs = 1048576;
+NonFullScreenPageModeUseOC = 2097152;
+DirectionL2R = 4194304;
+DirectionR2L = 8388608;
+PrintScalingNone = 16777216;
+#################
+//public PdfPageLabels()
+//public void addPageLabel(1, int stl, null, 1);
+//public void setPageLabels(PdfPageLabels pageLabels)
+DECIMAL_ARABIC_NUMERALS = 0;
+UPPERCASE_ROMAN_NUMERALS = 1;
+LOWERCASE_ROMAN_NUMERALS = 2;
+UPPERCASE_LETTERS = 3;
+LOWERCASE_LETTERS = 4;
+EMPTY = 5;
+###################
+public void setFullCompression() {
+public void setCompressionLevel(int compressionLevel) 
+DEFAULT_COMPRESSION = -1;
+NO_COMPRESSION = 0;
+BEST_SPEED = 1;
+BEST_COMPRESSION = 9;
+##############

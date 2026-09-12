@@ -1,0 +1,7 @@
+car: araba
+coche: araba
+pencil: kalem
+school: okul
+escuela: okul
+street: cadde
+way: yol

@@ -1,0 +1,108 @@
+        JMenuItem enterEmojiItem = getMenuItem ("Convert Emoji Surrogate", -1);
+        enterEmojiItem.addActionListener (new ActionListener ()
+        {
+            public void actionPerformed (ActionEvent evt)
+            {
+                String m=txt.getText ();
+                m=m.trim ();
+
+                int mlen=m.length ();
+                if (m == null || mlen < 1)
+                {
+                    System.out.println ("Zero Length Text For Emoji Char!");
+                    return;
+                }
+
+                m=m.trim ();
+                if (mlen < 1)
+                {
+                    System.out.println ("Zero Length Text For Emoji Char!");
+                    return;
+                }
+
+                if (mlen > (128*6))
+                {
+                    System.out.println ("Text is Too Long, Maximum Convert 128*6 Chars!");
+                    return;
+                }
+
+                if (m.indexOf (",") < 0)
+                {
+                    m=m+",";
+                }
+
+                String emojis []=m.split (",");
+
+                if (emojis == null) return;
+
+                mlen = emojis.length;
+
+                if (mlen < 1)
+                {
+                    System.out.println ("Insufficient Array Error!!");
+                    return;
+                }
+
+                StringBuffer sbri=new StringBuffer ();
+                String emoji="";
+                int S=-1;
+
+                for (int i=0; i<mlen; i++)
+                {
+                    emoji=emojis [i];
+
+                    if (emoji.startsWith ("0x"))
+                    {
+                        emoji=emoji.substring (2);
+                        try
+                        {
+                            S=Integer.parseInt (emoji, 0x10);
+                        }
+                        catch (NumberFormatException nfe)
+                        {
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        try
+                        {
+                            S=Integer.parseInt (emoji);
+                        }
+                        catch (NumberFormatException nfe)
+                        {
+                            continue;
+                        }
+                    }
+
+                    if (S<0) continue;
+
+                    if (S >= 0x10000  && S <= 0x10FFFF)
+                    {
+                        double HD=Math.floor ((S-0x10000) / 0x400) + 0xD800;
+                        double LD=((S-0x10000) % 0x400) + 0xDC00;
+
+                        int H=(int)HD;
+                        int L=(int)LD;
+
+                        sbri.append ((char)(H));
+                        sbri.append ((char)(L));
+                        sbri.append (" ");
+                    }
+                    else
+                    {
+                        String strx=Character.toString ((char)(S));
+                        sbri.append (strx);
+                        sbri.append (" ");
+                    }
+                }//for end
+
+                final String TEXT=sbri.toString ();
+
+                txt.setText ("");
+                txt.setText (TEXT);
+
+                return;
+            }
+        });
+        m2a.add (enterEmojiItem);

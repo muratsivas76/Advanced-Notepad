@@ -1,0 +1,94 @@
+REGEX EGITIM VE IPUCLARI REHBERI (JAVA UYUMLU)
+
+   1. TEMEL KARAKTER SINIFLARI
+
+------------------------------
+[abc] : a, b veya c karakterlerinden biri.
+
+[^abc] : a, b veya c DISINDAKI herhangi bir karakter.
+
+[a-zA-Z] : Tum kucuk ve buyuk harfler.
+
+[a-zA-Zşığ] : Eklenen Turkce karakterler dahil tum karakterler.
+
+\d : Rakam (0-9).
+
+\w : Harf, rakam veya alt cizgi (word character).
+
+Not: (\w+)(\d+) deyince ilk parantezli kisim $1, ikinci parantezli kisim ise $2'ye karsilik gelir. Kelime+tamRakam...
+
+\s : Boşluk karakterleri (space, tab, newline).
+. : Yeni satir haric herhangi bir karakter.
+
+   1. MIKTAR BELIRLEYICILER (QUANTIFIERS)
+------------------------------
+
+* : 0 veya daha fazla (Hic olmasa da olur).
+
+* : 1 veya daha fazla (En az bir tane olmali).
+
+? : 0 veya 1 (Opsiyonel).
+
+{n} : Tam n defa tekrar etsin.
+
+{n,} : En az n defa tekrar etsin.
+
+
+   1. ILGINC VE FAYDALI SENARYOLAR
+
+------------------------------
+--- SENARYO 1: Gereksiz Bosluklari Temizleme ---
+Regex: "\s{2,}"
+Aciklama: Metin icindeki 2 veya daha fazla yan yana gelmis boslugu bulur.
+Kullanim: replaceAll("\s{2,}", " ") -> Tum coklu bosluklari tek bosluga indirir.
+
+--- SENARYO 2: HTML Etiketlerini Ayiklama ---
+
+Regex: "<[^>]>"
+Aciklama: "<" ile baslayan, icinde ">" olmayan her seyi al ve ">" ile bitir.
+Kullanim: replaceAll("<[^>]>", "") -> Metindeki tum HTML taglerini siler.
+
+--- SENARYO 3: Buyuk/Kucuk Harf Duyarsiz Arama ---
+Regex: "(?i)elma"
+Aciklama: (?i) bayragi "elma, ELMA, ElMa" gibi her turlu varyasyonu yakalar.
+
+--- SENARYO 4: Sadece Kelime Basindaki/Sonundaki Rakamlar ---
+Kelime basi: "\b\d+" (Ornegin: "12elma" daki 12)
+Kelime sonu: "\d+\b" (Ornegin: "elma12" deki 12)
+
+--- SENARYO 5: Satir Basindaki Bosluklar (Multiline) ---
+Regex: "(?m)^\s+"
+Aciklama: (?m) modu sayesinde her satiri ayri gorur ve satir basindaki bosluklari secer.
+
+--- SENARYO 6: Tekrarlanan Kelimeleri Bulma ---
+Regex: "\b(\w+)\s+\1\b"
+Aciklama: Bir kelimeyi bulur (\w+), sonra bir bosluk birakip aynisinin (\1) olup olmadigina bakar.
+Ornek: "merhaba merhaba" -> ikinci "merhaba"yı yakalar.
+
+--- SENARYO 7: Ozel Karakterlerin Onundeki Sayilar (Lookahead) ---
+Regex: "\d+(?=[$€])" Aciklama: Sadece yaninda $ veya € olan rakamlari bulur ama para birimi simgesini secmeye dahil etmez.
+Ornek: "100$ ve 200TL" -> Sadece 100'u yakalar.
+
+--- SENARYO 8: E-posta Taslagi (Basit) ---
+Regex: "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+Aciklama: Standart bir e-posta yapisini kontrol eder.
+
+   1. ALTIN KURALLAR VE IPUCLARI
+
+------------------------------
+
+* Java'da ters egik cizgi kullanirken ciftlemeyi unutma: \d yerine \d.
+
+* Nokta (.) ozel bir karakterdir. Gercek nokta icin \. kullanmalisin.
+
+* Pipe (|) operatörü gruplar arasinda VEYA mantigi kurar: (elma|armut|muz).
+
+* Lookbehind (?<=...) ve Lookahead (?=...) "isaretci" gibidir, yer kaplamaz ve silinmezler.
+
+------------------------------
+
+To strengthen your regex skills:
+
+* Try writing a regex for IBAN format.
+* Try finding duplicate spaces within a text.
+* Try extracting text inside parentheses.
